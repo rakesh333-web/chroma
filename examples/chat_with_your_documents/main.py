@@ -73,7 +73,7 @@ def main(
     model_name = "gpt-3.5-turbo"
     answer = input(f"Do you want to use GPT-4? (y/n) (default is {model_name}): ")
     if answer == "y":
-        model_name = "gpt-4"
+        model_name = "gpt-4o"
 
     # Instantiate a persistent chroma client in the persist_directory.
     # This will automatically load any previously saved collections.
