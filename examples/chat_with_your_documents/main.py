@@ -66,7 +66,7 @@ def main(
     # Check if the OPENAI_API_KEY environment variable is set. Prompt the user to set it if not.
     if "OPENAI_API_KEY" not in os.environ:
         openai.api_key = input(
-            "Please enter your OpenAI API Key. You can get it from https://platform.openai.com/account/api-keys\n"
+            "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"
         )
 
     # Ask what model to use
