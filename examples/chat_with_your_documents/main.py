@@ -66,7 +66,7 @@ def main(
     # Check if the OPENAI_API_KEY environment variable is set. Prompt the user to set it if not.
     if "OPENAI_API_KEY" not in os.environ:
         openai.api_key ="e6e399c281c84e9da226cb96d34c2f3a"
-        openai.api_version="2023-12-01-preview"
+        openai.api_version="2023-08-01"
         openai.azure_endpoint="https://madhaviopenai1.openai.azure.com/"
 
     # Ask what model to use
