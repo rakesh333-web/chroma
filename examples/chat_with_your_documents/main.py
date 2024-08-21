@@ -60,54 +60,14 @@ def get_chatGPT_response(query: str, context: List[str], model_name: str) -> str
     return response.choices[0].message.content  # type: ignore
 
 
-import os
-import requests
-import json
-import argparse
-import chromadb
-
-def get_azure_openai_response(prompt: str, model_name: str) -> str:
-    # Retrieve Azure OpenAI API key and endpoint from environment variables
-    api_key = os.getenv("e6e399c281c84e9da226cb96d34c2f3a")
-    endpoint = os.getenv("https://madhaviopenai1.openai.azure.com/")
-    api_version = "2023-08-01"  # Ensure this matches the version you are using
-
-    if not api_key or not endpoint:
-        raise ValueError("Azure OpenAI API key or endpoint not set")
-
-    # Define the headers for authentication
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
-
-    # Define the URL for the API request
-    url = f"{endpoint}/v1/engines/{model_name}/completions"
-
-    # Define the payload for the API request
-    payload = {
-        "prompt": prompt,
-        "max_tokens": 100,  # Adjust max_tokens as needed
-        "temperature": 0.7  # Adjust temperature as needed
-    }
-
-    # Make the API request
-    try:
-        response = requests.post(url, headers=headers, json=payload)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        result = response.json()
-        return result.get("choices", [{}])[0].get("text", "").strip()
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return "Error in response"
-
 def main(
     collection_name: str = "documents_collection", persist_directory: str = "."
 ) -> None:
-    # Check if the Azure OpenAI API key and endpoint environment variables are set.
-    if "AZURE_OPENAI_API_KEY" not in os.environ or "AZURE_OPENAI_ENDPOINT" not in os.environ:
-        print("Please set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT environment variables.")
-        return
+    # Check if the OPENAI_API_KEY environment variable is set. Prompt the user to set it if not.
+    if "OPENAI_API_KEY" not in os.environ:
+        openai.api_key ="e6e399c281c84e9da226cb96d34c2f3a"
+        openai.api_version="2023-12-01-preview"
+        openai.azure_endpoint="https://madhaviopenai1.openai.azure.com/"
 
     # Ask what model to use
     model_name = "gpt-3.5-turbo"
@@ -115,13 +75,15 @@ def main(
     if answer == "y":
         model_name = "gpt-4"
 
-    # Instantiate a persistent Chroma client in the persist_directory.
+    # Instantiate a persistent chroma client in the persist_directory.
+    # This will automatically load any previously saved collections.
+    # Learn more at docs.trychroma.com
     client = chromadb.PersistentClient(path=persist_directory)
 
     # Get the collection.
     collection = client.get_collection(name=collection_name)
 
-    # Use a simple input loop.
+    # We use a simple input loop.
     while True:
         # Get the user's query
         query = input("Query: ")
@@ -142,14 +104,15 @@ def main(
             ]
         )
 
-        # Get the response from Azure OpenAI
-        response = get_azure_openai_response(query, model_name)  # type: ignore
+        # Get the response from GPT
+        response = get_chatGPT_response(query, results["documents"][0], model_name)  # type: ignore
 
         # Output, with sources
         print(response)
         print("\n")
         print(f"Source documents:\n{sources}")
         print("\n")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
