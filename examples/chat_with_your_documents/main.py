@@ -66,14 +66,14 @@ def main(
     # Check if the OPENAI_API_KEY environment variable is set. Prompt the user to set it if not.
     if "OPENAI_API_KEY" not in os.environ:
         openai.api_key ="e6e399c281c84e9da226cb96d34c2f3a"
-        openai.api_version="2023-08-01"
+        openai.api_version="2024-05-13"
         openai.azure_endpoint="https://madhaviopenai1.openai.azure.com/"
 
     # Ask what model to use
-    model_name = "gpt-3.5-turbo"
-    answer = input(f"Do you want to use GPT-4? (y/n) (default is {model_name}): ")
-    if answer == "y":
-        model_name = "gpt-4o"
+    #model_name = "gpt-3.5-turbo"
+    #answer = input(f"Do you want to use GPT-4? (y/n) (default is {model_name}): ")
+    #if answer == "y":
+    model_name = "gpt-4o"
 
     # Instantiate a persistent chroma client in the persist_directory.
     # This will automatically load any previously saved collections.
