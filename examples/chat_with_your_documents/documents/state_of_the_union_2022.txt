@@ -741,4 +741,4 @@ Set global test switches, user switches, and datalogging options for operator (p
 usage.
 8. Save these settings in the operator configuration file (.oper file).
 9. Build the project for release.
-The following topics are available:
+The following topics are available
