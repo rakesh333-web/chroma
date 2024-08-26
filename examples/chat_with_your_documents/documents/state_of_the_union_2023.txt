@@ -1,1 +1,3244 @@
+/*****************************************************************************
+*                                                                            *
+*       Source title:   SEP_ACPL_344JT_Mahesh.CPP                                   *
+*                       (xxx SHORT DESCRIPTION xxx)                          *
+*         Written by:   nnnnn n. nnnnn                                       *
+*   Last Modified by:                                                        *
+*               Date:   mm/dd/yy                                             *
+*        Current Rev:   r.rr                                                 *
+*                                                                            *
+*        Description:                                                        *
+*                                                                            *
+*   Revision History:                                                        *
+*                                                                            *
+*     mm/dd/yy  r.rr  - Original coding.                                     *
+*                                                                            *
+*****************************************************************************/
+
+#include "pch.h"
+//#include "SEP_ACPL_344JT_Mahesh_Awg.h"
+//////////////////////////////////////////////////////////////////////////////
+// CSEP_ACPL_344JT_Mahesh application declaration
+//
+CSEP_ACPL_344JT_Mahesh theApp;
+
+//////////////////////////////////////////////////////////////////////////////
+// CSEP_ACPL_344JT_Mahesh Datasheet Variable Declarations
+//
+//{{AFX_ETS_PRODUCT_DATASHEET_VARIABLES
+DECLARE_PDS_VARIABLE( PDS_TESTNUM, TestNmbr, "Test Number" );
+DECLARE_PDS_VARIABLE( PDS_SUBTESTNUM, SubTestNmbr, "Subtest Number" );
+DECLARE_PDS_VARIABLE( PDS_DLOGDESC, DLogDesc, "Datalog Description" );
+DECLARE_PDS_VARIABLE( PDS_LOLIM, LoLim, "Low Limit" );
+DECLARE_PDS_VARIABLE( PDS_HILIM, HiLim, "High Limit" );
+DECLARE_PDS_VARIABLE( PDS_DFORMAT, DFormat, "Data Format" );
+DECLARE_PDS_VARIABLE( PDS_UNITS, Units, "Units" );
+DECLARE_PDS_VARIABLE( PDS_LOFBIN, LoFBin, "Low Fail Bin" );
+DECLARE_PDS_VARIABLE( PDS_HIFBIN, HiFBin, "High Fail Bin" );
+DECLARE_PDS_VARIABLE( PDS_LOSPEC, LoSpec, "Low Specification" );
+DECLARE_PDS_VARIABLE( PDS_HISPEC, HiSpec, "High Specification" );
+DECLARE_PDS_VARIABLE( PDS_SIMPLEMODE, SimpleMode, "FMEA Simple Mode" );
+DECLARE_PDS_VARIABLE( PDS_MANDATORY, PassRequired, "Pass Required Test" );
+DECLARE_PDS_VARIABLE( PDS_EXECREQUIRED, ExecRequired, "Exec Required" );
+//}}AFX_ETS_PRODUCT_DATASHEET_VARIABLES
+
+//{{AFX_ETS_PIN_MAP_VARIABLES
+// Caution::  The following pin definitions are filled in by the PinMap Editor.
+//PMEVersion 1 4 ID 11 6 0;
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VCC_APU_64_80, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, UVLO_APU_65_81, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, FAULT_APU_66_82, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, AN_APU_67_83, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, CA_APU_68_84, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, CLAMP_APU_72_88, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VE_APU_73_89, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, DESAT_APU_74_90, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, LED2P_APU_75_91, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VEE2_APU_76_92, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VO_SPU_40_42, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VCC2_SPU_41_43, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VO_UPD_2_18, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, DESAT_UPD_1_16, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, UVLO_HSD_0_16, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, FAULT_HSD_1_17, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, AN_HSD_2_18, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, LED2P_HSD_3_19, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VO_HSD_4_20, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, UVLO_MCMUX1, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, FAULT_MCMUX3, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, UVLO_TO_HSD_CON_CBU_0_16, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, DESAT_TO_UPD_CON_CBU_1_17, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, LED2P_TO_HSD_CON_CBU_2_18, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, CA_TO_200E_GND_CBU_3_19, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, FAULT_TO_HSD_CON_CBU_4_20, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, AN_TO_HSD_CON_CBU_5_21, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VO_TO_UPD_CON_CBU_6_22, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VO_TO_RG_CON_CBU_7_23, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, CLAMP_TO_CG_CON_CBU_8_24, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VCC2_TO_DCAP_CON_CBU_9_25, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VO_TO_HSD_CON_CBU_10_26, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VEE2_TO_GND_CBU_11_27, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, CLAMP_TO_SPU_B_CON_CBU_12_28, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, UVLO_TO_PULL_UP_CON_CBU_13_29, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, FAULT_TO_PULL_UP_CON_CBU_14_30, "");
+DECLARE_PINMAP_VARIABLE(PME_CHAR, VCC2_TO_UPU_CON_CBU_15_31, "");
+//}}AFX_ETS_PIN_MAP_VARIABLES
+
+//{{AFX_ETS_GROUP_MAP_VARIABLES
+// Caution::  The following group definitions are filled in by the PinMap Editor
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Conti_APU_N100uA, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Conti_APU_N10uA, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Conti_SPU_N100uA, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Conti_APU_P100uA, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Leak_APU_0p3V, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, HDS_ALL_GRP, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Leak_APU_6V, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, Parallel_Leak_APU_0p8V, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, APU_ALL_GRP, "");
+DECLARE_GROUPMAP_VARIABLE(GME_CHAR, CBU_ALL_GRP, "");
+//}}AFX_ETS_GROUP_MAP_VARIABLES
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The UserInit() function is called by the 'TestMain' module one time     //
+//  near the beginning of test execution, after all Global variables and    //
+//  Global Switches have been initialized.                                  //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::UserInit( void )
+{
+    /////////////////////////////////////////////////////////////////////////////
+    // (Optionally) setup for loading a HSD32 digital vector file
+    //
+#if 1
+    char vecFile[MAX_PATH];
+    GetETSVariable(VEC_FILE, vecFile, MAX_PATH);
+
+    if ( digitalpatternload(vecFile) )                      // example load vec file
+    {
+        etsMessageBox("Could Not Initialize Vector File !!", MB_OK | MB_ICONSTOP);
+        return FALSE;   // Abort Run of the SEP_ACPL_344JT_Mahesh application
+    }
+#endif
+
+    /////////////////////////////////////////////////////////////////////////////
+    // (Optionally) msLogResult datalogging system.
+    //
+    // This function retrieves information from the Product Datasheet file.
+    //
+    // THIS FUNCTION MUST BE CALLED PRIOR TO USING THE msLogResult() AND
+    // msLogResultAll() FUNCTIONS.  This function should be called in UserInit()
+    //
+#if 1
+    msLogResultUpdate();
+#endif
+
+    //////////////////////////////////////////////////////////////////////////
+    // (Optionally) setup for a multisite application.
+    //
+    //  - First create a boolean array indicating which sites will be active.
+    //  - Then call msSetSites() passing in this array.
+    //
+    // Additionally, ETS supplies the FOR_EACH_SITE macro. This macro operates
+    // as a C for-loop iterating through the list of valid sites in the test
+    // program. This macro shown below is defined in the project's '.h' file.
+    //
+    // FOR_EACH_SITE( site, num_sites )
+    // where:
+    //         site - an integer that contains the current valid site of the
+    //                iteration. During the iteration, 'site' will only contain
+    //                site numbers of 'valid' test sites.
+    //    num_sites - The total number of sites contained in the test program
+    //
+    // Example:  Log the X,Y coordinates for the test run...
+    //
+    //        FOR_EACH_SITE( site, total_sites )
+    //        {
+    //            msLogXYCoords( site, Xcoord, Ycoord );
+    //        }
+    //
+#if 0
+    int valid[NUM_SITES];
+    int count;
+
+    for( count = 0; count < NUM_SITES; count ++ )
+        valid[count] = TRUE;
+    msSetSites( NUM_SITES, valid );
+#endif
+
+    //////////////////////////////////////////////////////////////////////////
+    // (Optionally) setup operator instructions in the test menu.
+    //
+    //  - Change '0' to '1' (in '#if 0' statement) if operator instructions are
+    //     desired...
+    //
+    //  SYNTAX:
+    //      SetOperatorInstruction( int linenumber, char *op_instr);
+    //
+    //  There are only two operator instruction lines allowed;
+    //           line number can only be 1 or 2.
+    //
+    //  EXAMPLE:
+    //      SetOperatorInstruction( 1, "Load DUT into socket and hit 'T' to test");
+    //      SetOperatorInstruction( 2, "Multiple DUT test - hit F1 key");
+    //
+#if 0
+    SetOperatorInstruction( 1, "Operator Instruction line #1" );
+    SetOperatorInstruction( 2, "Operator Instruction line #2" );
+#endif
+   
+    //Create and Load ICC1 Pattern for pattern based test
+    apu32patternloader( VCC_APU_64_80, "ICC1_Pattern", APU32_FV, APU32_30V, ICC1_Pattern_Data, (sizeof(ICC1_Pattern_Data)/sizeof(APU32_PAT_VI_CTRL_STR)), 0, &ICC1_Pattern_Regions, MS_ALL );
+    //Create and Load ICC2 Pattern for pattern based test
+    spu2112patternloader( VCC2_SPU_41_43, "ICC2_Pattern", SPU2112_FV, SPU2112_30V, ICC2_Pattern_Data, (sizeof(ICC2_Pattern_Data)/sizeof(SPU2112_PAT_VI_CNTRL_STR)), 0, &ICC2_Pattern_Regions, MS_ALL );
+
+    //Create and Load ICC1 Pattern for Accum function based test
+    apu32patternloader( VCC_APU_64_80, "ICC1_Accum_Pattern", APU32_FV, APU32_30V, ICC1_Accum_Pattern_Data, (sizeof(ICC1_Accum_Pattern_Data)/sizeof(APU32_PAT_VI_CTRL_STR)), 0, &ICC1_Accum_Pattern_Regions, MS_ALL );
+    //Create and Load ICC2 Pattern for Accum function  based test
+    spu2112patternloader( VCC2_SPU_41_43, "ICC2_Accum_Pattern", SPU2112_FV, SPU2112_30V, ICC2_Accum_Pattern_Data, (sizeof(ICC2_Accum_Pattern_Data)/sizeof(SPU2112_PAT_VI_CNTRL_STR)), 0, &ICC2_Accum_Pattern_Regions, MS_ALL );
+  
+    //Create and Load ITH1 AWG pattern
+    apu32patternloader( AN_APU_67_83, "ITH1_Pattern", APU32_FI, APU32_10V, ITH1_Pattern_Data, (sizeof(ITH1_Pattern_Data)/sizeof(APU32_PAT_VI_CTRL_STR)), 0, &ITH1_Pattern_Regions, MS_ALL );
+    spu2112patternloader( VO_SPU_40_42, "ITH1_Vo_Pattern", SPU2112_FI, SPU2112_30V, ITH1_Vo_Pattern_Data, (sizeof(ITH1_Vo_Pattern_Data)/sizeof(SPU2112_PAT_VI_CNTRL_STR)), 0, &ITH1_Vo_Pattern_Regions, MS_ALL );
+
+    //Create and Load ITH2 AWG pattern
+    apu32patternloader( LED2P_APU_75_91, "ITH2_Pattern", APU32_FI, APU32_10V, ITH2_Pattern_Data, (sizeof(ITH2_Pattern_Data)/sizeof(APU32_PAT_VI_CTRL_STR)), 0, &ITH2_Pattern_Regions, MS_ALL );
+    apu32patternloader( UVLO_APU_65_81, "ITH2_Uvlo_Pattern", APU32_FV, APU32_10V, ITH2_Uvlo_Pattern_Data, (sizeof(ITH2_Uvlo_Pattern_Data)/sizeof(APU32_PAT_VI_CTRL_STR)), 0, &ITH2_Uvlo_Pattern_Regions, MS_ALL );
+    
+    //Create and Load OVC_Flt_FUN AWG pattern
+    apu32patternloader( AN_APU_67_83, "OVC_Func_Pattern", APU32_FI, APU32_10V, OVC_Func_Pattern_Data, (sizeof(OVC_Func_Pattern_Data)/sizeof(APU32_PAT_VI_CTRL_STR)), 0, &OVC_Func_Pattern_Regions, MS_ALL );
+
+    //Set up clock ro sun AWG
+    scuset(SCU_DDSA, 25.0);
+    scuclksource(SCU_MAINCLKA, SCU_DDSA);
+
+    //Set up sequence
+    scusequence(VCC_APU_64_80, "Seq_ICC1_AWG", MS_ALL, "330 ON");
+    scusequence(VCC2_SPU_41_43, "Seq_ICC2_AWG", MS_ALL, "330 ON");
+
+    //Set up accum sequence
+    scusequence(VCC_APU_64_80, "Seq_ICC1_Accum", MS_ALL, "330 ON");
+    scusequence(VCC2_SPU_41_43, "Seq_ICC2_Accum", MS_ALL, "330 ON");
+
+    scusequence("AN_APU_67_83, VO_SPU_40_42", "Seq_ITH1_AWG", MS_ALL, "190 ON");
+    scusequence("LED2P_APU_75_91, UVLO_APU_65_81", "Seq_ITH2_AWG", MS_ALL, "200 ON");
+
+    scusequence("AN_APU_67_83", "Seq_OVC_Func_AWG", MS_ALL, "100 ON");
+    // Returning FALSE will abort Loading of Test program and exit Test
+    // Executive.
+    //
+    return TRUE;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The UserExit() function is called by the 'TestMain' module one time     //
+//  near the end of test execution, before the Global variables and         //
+//  Global Switches are saved.                                              //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::UserExit( void )
+{
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnTestInit() function is called before the display of the Test      //
+//  Main Menu to reinitialize the DUT and/or reinitialize any program       //
+//  variables that might need to be reset.  This function will be invoked   //
+//  prior to calling the first function in the progflow structure.          //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnTestInit( void )
+{
+ 
+    Conti_Pattern = GetUserSwitch(1);
+    //force 0V on VEE2 pin
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    // Returning TRUE will enable the SOT scanning loop.
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnTestExit() function is called after the selection of the          //
+//  Quit button from the "Test", "Quit" Buttons Screen to reinitialize any  //
+//  program variables or system resources that need to be "cleaned-up".     //
+//  This function will be invoked regardless of the pass/fail status of     //
+//  the DUT.                                                                //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnTestExit( void )
+{
+    //////////////////////////////////////////////////////////////////////////
+    // Returning FALSE will automatically unload the test application
+    //
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnTestStartup() function is called before each test-run to          //
+//  initialize any program variables or system resources that might need to //
+//  be reset each time the test is run as opposed to only at the time of    //
+//  program entry as in the OnTestInit() routine. This function will be     //
+//  invoked prior to calling the first function in the progflow structure.  //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnTestStartup( void )
+{
+    //////////////////////////////////////////////////////////////////////////
+    // Returning FALSE will abort Program flow execution and return to
+    // Test/Quit prompt.
+    //
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnTestCompletion() function is called after each test-run to        //
+//  re-initialize any program variables or system resources that might need //
+//  to be reset after each test suite is run. This function will be invoked //
+//  after calling the last function in the progflow structure.              //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnTestCompletion( void )
+{
+    
+    //Force All DUT pins with 0V
+    
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Turn OFF All instruments
+    apu32set(APU_ALL_GRP, APU32_OFF, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //reset all digital instruments
+    hsd32viset(AN_HSD_2_18, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+    hsd32viset(VO_HSD_4_20, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+    hsd32viset(LED2P_HSD_3_19, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+    hsd32viset(FAULT_HSD_1_17, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+    hsd32viset(UVLO_HSD_0_16, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+
+    upd64viset(VO_UPD_2_18, UPD64_FV, 0, UPD64_24V, UPD64_2MA, UPD64_PIN_TO_VI, UPD64_KELVIN_OFF, MS_ALL);
+    upd64viset(DESAT_UPD_1_16, UPD64_FV, 0, UPD64_24V, UPD64_2MA, UPD64_PIN_TO_VI, UPD64_KELVIN_OFF, MS_ALL);
+
+    //Turn OFF All instruments
+    hsd32disconnect(HDS_ALL_GRP, MS_ALL);
+    upd64disconnect(VO_UPD_2_18, MS_ALL);
+    upd64disconnect(DESAT_UPD_1_16, MS_ALL);
+    
+    //Open CBITS
+    cbuopen( CBU_ALL_GRP, MS_ALL );
+    lwait(1 MSEC);
+    
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnLogData() function is called During a call to the logdata(),      //
+//  mslogdata(), mslogdataall(), loginteger() and msloginteger() functions. //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnLogData( int site, datalog_info_t& info )
+{
+    int PassFail;
+
+    if ( ( PassFail = GetETSVariable(PASSFAIL) ) == 2 )
+    {
+        //////////////////////////////////////////////////////////////////////
+        // An alarm condition is present.  To determine what alarm(s) are
+        // present call alarmstat( 0 );
+        //
+        PostAlarm( "ALARM" );
+    }
+
+    ////////////////////////////////////////////////////////////////////////// 
+    // To make permanent changes to the "info" structure elements, return TRUE 
+    // from this function, otherwise return FALSE 
+    // 
+    return FALSE; 
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnFailSite() function is called During a call to the msfailsite()   //
+//  to enable the user to turn off and invalidate a particular site         //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnFailSite( int site )
+{
+    //Force All DUT pins with 0V
+    
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+
+    //Turn OFF All instruments
+    apu32set(APU_ALL_GRP, APU32_OFF, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+
+    //reset all digital instruments
+    hsd32viset(AN_HSD_2_18, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, site);
+    hsd32viset(VO_HSD_4_20, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, site);
+    hsd32viset(LED2P_HSD_3_19, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, site);
+    hsd32viset(FAULT_HSD_1_17, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, site);
+    hsd32viset(UVLO_HSD_0_16, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, site);
+
+    upd64viset(VO_UPD_2_18, UPD64_FV, 0, UPD64_24V, UPD64_2MA, UPD64_PIN_TO_VI, UPD64_KELVIN_OFF, site);
+    upd64viset(DESAT_UPD_1_16, UPD64_FV, 0, UPD64_24V, UPD64_2MA, UPD64_PIN_TO_VI, UPD64_KELVIN_OFF, site);
+
+    //Turn OFF All instruments
+    hsd32disconnect(HDS_ALL_GRP, site);
+    upd64disconnect(VO_UPD_2_18, site);
+    upd64disconnect(DESAT_UPD_1_16, site);
+
+    //Open CBITS
+    cbuopen(CBU_ALL_GRP, site);
+    lwait(1 MSEC);
+    
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnSot() function is called while waiting for a valid SOT            //
+//  signal either from the Operator Box, Handler, or user interface.        //
+//  SotValue contains the SOT event.                                        //
+//                                                                          //
+//    -2  =   Handler signaled SOT                                          //
+//    -1  =   Operator Box SOT switch Pressed                               //
+//    'T' =   Key Board 'T'/ or Test Button Pressed                         //
+//    'Q' =   Key Board 'Q'/ or Quit Button Pressed                         //
+//    240 =   All distributions stop (No message will appear.)              //
+//            System software defines FORCE_QUIT as 240.                    //
+//    F1_KEY - F5_KEY  = special Test Key/Button Pressed                    //
+//    F6_KEY - F10_KEY = Datalog Mode/Binning Summary State                 //
+//                       Change requested                                   //
+//                                                                          //
+//  The SotValue is the virtual key code of the key                         //
+//  hit on the keyboard (NOT ASCII CODE). When trapping specific            //
+//  key hits, use the windows defines for the virtual key codes. These      //
+//  defines are: (alpha codes A thru Z)   VK_A, VK_B, ..., VK_Z             //
+//               (numeric codes 0 thru 9) VK_0, VK_1, ..., VK_9             //
+//               (function key codes F1 - F12) F1_KEY, F2_KEY, ..., F12_KEY //
+//                                                                          //
+//  Upon return from this function, the TestMain Framework will take action //
+//  on the SotValue.                                                        //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+int CSEP_ACPL_344JT_Mahesh::OnSot(int SotValue)
+{
+    return SotValue;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnUtilError function is called in response to an ETS Utility        //
+//  error. The ETS Utility Error Number is passed in to the user so         //
+//  certain errors can be trapped.                                          //
+//                                                                          //
+//  Returning TRUE will pass the error into the ETS Message Handler         //
+//  program, and returning FALSE will direct the Message Handler to ignore  //
+//  the error.                                                              //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnUtilError(int errnum)
+{
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  The OnAlarm function is called in response to an alarm.                 //
+//  This function returns the test name where the alarm occurred, the name  //
+//  of the API where the alarm was detected, and the pin list from the API. //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnAlarm( const char *TestName, const char *ApiName, const char *PinName )
+{
+    return TRUE;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//  This function will automatically be called each time the interlock is   //
+//  checked by the Test Executive. The interlock is checked before each DUT //
+//  tested, before the call to the user's OnTestStartup() routine. The      //
+//  intlocks parameter passed in is a bitmapped value containing the state  //
+//  of all interlocks in the ETS Test head.                                 //
+//                                                                          //
+//  Returning TRUE will pass the interlock check. Returning FALSE will fail  //
+//  the interlock check. If the intlocks variable is non-zero the return    //
+//  value has no effect. If the interlock check fails, the DUT will not be  //
+//  tested.                                                                 //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+BOOL CSEP_ACPL_344JT_Mahesh::OnInterlock(ULONG intlocks)
+{
+    return TRUE;
+}
+
+/*****************************************************************************
+*                                                                            *
+*                          Local (module) functions                          *
+*                   User Specific Application Code Follows                   *
+*                                                                            *
+*****************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+// ---------------------------[ Test Functions ]--------------------------- //
+// The functions defined here are the building-blocks of the test program.  //
+// Executed as ordered by the Program Flow structure array, each returns a  //
+// status of SUCCESS (0) or FAILURE (-1) to indicate to the summary system  //
+// whether the DUT passed each test (as controlled by the 'STOP_ON_FAIL'    //
+// global switch). Multi-site functions should return the value obtained    //
+// from the msSiteStat() function.                                          //
+//                                                                          //
+// Any (floating-point) data that is to be recorded by the datalog system   //
+// should be logged by calling one of the datalogging functions: msLogData()//
+// msLogDataAll(), msLogResult(), or msLogResultAll().                      //
+//                                                                          //
+// The function 'etsprintf()' is used to write to the output window. The    //
+// syntax of etsprintf() is identical to C's printf(). This function should //
+// be used if wanting to print to screen inside of test program.            //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+
+// Test Function: UserTest
+//ETS_PRGFLOW_FUNC UserTest( int DSIndex, LPCTSTR TestLabel )
+//{
+//    ////////////////////////////////////////////////////////////////////////
+//    // A simple "hello world" test function
+//    //
+//    etsprintf("Hello World, this is the User's Test\n");
+//    return SUCCESS;
+//} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Continuity_Test
+ETS_PRGFLOW_FUNC Continuity_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    delay = 500 USEC;
+
+    //Force All DUT pins with 0V except PUT and on PUT FIMV
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    // Update test numbering information
+    SetTestNumber( TestNmbr[DSIndex] );
+    SetSubTestNumber( SubTestNmbr[DSIndex] );
+
+        if (!Conti_Pattern) {
+           
+        //Diclare data log variables
+        RESULTS_STR conti_VCC2      [NUM_SITES],
+                    conti_CLAMP     [NUM_SITES], 
+                    conti_UVLO      [NUM_SITES],
+                    conti_VCC1      [NUM_SITES],
+                    conti_FAULT     [NUM_SITES],
+                    conti_AN        [NUM_SITES],
+                    conti_DESAT     [NUM_SITES],
+                    conti_VE        [NUM_SITES],
+                    conti_VOUT      [NUM_SITES],
+                    conti_LED2PVEE2 [NUM_SITES],
+                    conti_LED2PIC   [NUM_SITES];
+
+        //Close required relays and wait for settiling
+        //No relay closed
+
+        //Force current and Measure result on PUT and store in variable
+        spu2112set(VCC2_SPU_41_43, SPU2112_FI, -0.1, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+        lwait( delay);
+        spu2112mv(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, SPU2112_PIN_OUT, MS_ALL);
+        groupgetresults(conti_VCC2, NUM_SITES);
+        //set PUT back to 0V
+        spu2112set(VCC2_SPU_41_43, SPU2112_FI, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+        spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+        //Force current and Measure result on PUT and store in variable
+        apu32set(CLAMP_APU_72_88, APU32_FI, -0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(CLAMP_APU_72_88, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_CLAMP, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(CLAMP_APU_72_88, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(UVLO_APU_65_81, APU32_FI, -0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(UVLO_APU_65_81, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_UVLO, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(UVLO_APU_65_81, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(VCC_APU_64_80, APU32_FI, -0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(VCC_APU_64_80, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_VCC1, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(VCC_APU_64_80, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(FAULT_APU_66_82, APU32_FI, -0.01, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(FAULT_APU_66_82, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_FAULT, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(FAULT_APU_66_82, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(AN_APU_67_83, APU32_FI, 0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(AN_APU_67_83, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_AN, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(AN_APU_67_83, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(DESAT_APU_74_90, APU32_FI, -0.01, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(DESAT_APU_74_90, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_DESAT, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(DESAT_APU_74_90, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(VE_APU_73_89, APU32_FI, -0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(VE_APU_73_89, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_VE, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(VE_APU_73_89, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        spu2112set(VO_SPU_40_42, SPU2112_FI, -0.1, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+        lwait(delay);
+        spu2112mv(VO_SPU_40_42, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, SPU2112_PIN_OUT, MS_ALL);
+        groupgetresults(conti_VOUT, NUM_SITES);
+        //set PUT back to 0V
+        spu2112set(VO_SPU_40_42, SPU2112_FI, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+        spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(LED2P_APU_75_91, APU32_FI, 0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(LED2P_APU_75_91, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_LED2PVEE2, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        //Force current and Measure result on PUT and store in variable
+        apu32set(LED2P_APU_75_91, APU32_FI, -0.01, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+        apu32mv(LED2P_APU_75_91, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+        groupgetresults(conti_LED2PIC, NUM_SITES);
+        //set PUT back to 0V
+        apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        lwait(delay);
+
+        //Open the relays and wait for settiling
+        //No Action required
+
+        //Data log the result
+        msLogResultAll(DSIndex++,   conti_VCC2,     NUM_SITES);
+        msLogResultAll(DSIndex++, conti_CLAMP,      NUM_SITES);
+        msLogResultAll(DSIndex++, conti_UVLO,       NUM_SITES);
+        msLogResultAll(DSIndex++, conti_VCC1,       NUM_SITES);
+        msLogResultAll(DSIndex++, conti_FAULT,      NUM_SITES);
+        msLogResultAll(DSIndex++, conti_AN,         NUM_SITES);
+        msLogResultAll(DSIndex++, conti_DESAT,      NUM_SITES);
+        msLogResultAll(DSIndex++, conti_VE,         NUM_SITES);
+        msLogResultAll(DSIndex++, conti_VOUT,       NUM_SITES);
+        msLogResultAll(DSIndex++, conti_LED2PVEE2,  NUM_SITES);
+        msLogResultAll(DSIndex++, conti_LED2PIC,    NUM_SITES);
+    }
+    
+    else {
+
+        apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+        cbuclose(UVLO_TO_HSD_CON_CBU_0_16, MS_ALL);
+        cbuclose(FAULT_TO_HSD_CON_CBU_4_20, MS_ALL);
+        lwait(delay);
+
+        digitalprofileselect("Profile1");
+        scurun(NULL, "Conti_pat", 1, MS_ALL);
+
+        cbuopen(UVLO_TO_HSD_CON_CBU_0_16, MS_ALL);
+        cbuopen(FAULT_TO_HSD_CON_CBU_4_20, MS_ALL);
+        lwait(delay);
+        apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+        apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    }
+
+     
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: LEakage_Test
+ETS_PRGFLOW_FUNC LEakage_Test( int DSIndex, LPCTSTR TestLabel )
+{
+
+    //Diclare data log variables
+    RESULTS_STR Leak_uvlo_0p3V      [NUM_SITES],
+                Leak_uvlo_6V        [NUM_SITES],
+                Leak_fault_0p3V     [NUM_SITES],
+                Leak_fault_6V       [NUM_SITES],
+                Leak_an_0p3V        [NUM_SITES],
+                Leak_led2p_0p3V     [NUM_SITES],
+                Leak_desat_0p3V     [NUM_SITES],
+                Leak_ve_0p3V        [NUM_SITES],
+                Leak_vout_0p3V      [NUM_SITES],
+                Leak_clamp_0p3V     [NUM_SITES],
+                Leak_icc2           [NUM_SITES],
+                Leak_led2p          [NUM_SITES],
+                Leak_desat          [NUM_SITES],
+                Leak_ve             [NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber( TestNmbr[DSIndex] );
+    SetSubTestNumber( SubTestNmbr[DSIndex] );
+
+
+    //Close the relays and wait for settiling
+    //No Action required
+   
+    //Force All DUT pins with 0V except PUT and on PUT FIMV
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(UVLO_APU_65_81, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(UVLO_APU_65_81, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_uvlo_0p3V, NUM_SITES);
+
+    apu32set(UVLO_APU_65_81, APU32_FV, 6, APU32_10V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(UVLO_APU_65_81, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_uvlo_6V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(FAULT_APU_66_82, APU32_FV, 0.3, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(FAULT_APU_66_82, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_fault_0p3V, NUM_SITES);
+
+    apu32set(FAULT_APU_66_82, APU32_FV, 6, APU32_10V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(FAULT_APU_66_82, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_fault_6V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(AN_APU_67_83, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(AN_APU_67_83, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_an_0p3V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(LED2P_APU_75_91, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(LED2P_APU_75_91, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_led2p_0p3V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(DESAT_APU_74_90, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(DESAT_APU_74_90, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_desat_0p3V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(VE_APU_73_89, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(VE_APU_73_89, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_ve_0p3V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force current and Measure result on PUT and store in variable
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.3, SPU2112_10V, SPU2112_2UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112mi(VO_SPU_40_42, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL );
+    groupgetresults(Leak_vout_0p3V, NUM_SITES);
+
+    //set PUT back to 0V
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_2UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(CLAMP_APU_72_88, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_clamp_0p3V, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force current and Measure result on PUT and store in variable
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 1.5, SPU2112_10V, SPU2112_20UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_icc2, NUM_SITES);
+
+    //set PUT back to 0V
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_10V, SPU2112_20UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(LED2P_APU_75_91, APU32_FV, 0.8, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(LED2P_APU_75_91, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_led2p, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Desat and VE failing at 0.8V vy grounding all pins
+    //Turn off the VO,VCC2 and VE pins and check.
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(DESAT_APU_74_90, APU32_FV, 0.8, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(DESAT_APU_74_90, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_desat, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force voltage and Measure result on PUT and store in variable
+    apu32set(VE_APU_73_89, APU32_FV, 0.8, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(VE_APU_73_89, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_ve, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Open the relays and wait for settiling
+    //No Action required
+
+    //do convertion based on the units in the PDS
+     //site = 0;
+    FOR_EACH_SITE(site, NUM_SITES) {
+        Leak_uvlo_0p3V  [site].value    =       (Leak_uvlo_0p3V     [site].value * 1000000  );//converted mA to nA
+        Leak_uvlo_6V    [site].value    =       (Leak_uvlo_6V       [site].value * 1000     );//converted mA to uA
+        Leak_fault_0p3V [site].value    =       (Leak_fault_0p3V    [site].value * 1000000  );//converted mA to nA
+        Leak_fault_6V   [site].value    =       (Leak_fault_6V      [site].value * 1000     );//converted mA to uA
+        Leak_an_0p3V    [site].value    =       (Leak_an_0p3V       [site].value * 1000000  );//converted mA to nA
+        Leak_led2p_0p3V [site].value    =       (Leak_led2p_0p3V    [site].value * 1000000  );//converted mA to nA
+        Leak_desat_0p3V [site].value    =       (Leak_desat_0p3V    [site].value * 1000000  );//converted mA to nA
+        Leak_ve_0p3V    [site].value    =       (Leak_ve_0p3V       [site].value * 1000000  );//converted mA to nA
+        Leak_vout_0p3V  [site].value    =       (Leak_vout_0p3V     [site].value * 1000000  );//converted mA to nA
+        Leak_clamp_0p3V [site].value    =       (Leak_clamp_0p3V    [site].value * 1000000  );//converted mA to nA
+        Leak_icc2       [site].value    =       (Leak_icc2          [site].value * 1000     );//converted mA to uA
+        Leak_led2p      [site].value    =       (Leak_led2p         [site].value * 1000     );//converted mA to uA
+        Leak_desat      [site].value    =       (Leak_desat         [site].value * 1000     );//converted mA to uA
+        Leak_ve         [site].value    =       (Leak_ve            [site].value * 1000     );//converted mA to uA
+    }
+
+    //Data log the result
+    msLogResultAll(DSIndex++, Leak_uvlo_0p3V    ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_uvlo_6V      ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_fault_0p3V   ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_fault_6V     ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_an_0p3V      ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_led2p_0p3V   ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_desat_0p3V   ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_ve_0p3V      ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_vout_0p3V    ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_clamp_0p3V   ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_icc2         ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_led2p        ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_desat        ,     NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_ve           ,     NUM_SITES);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: VF_BVR_Test
+ETS_PRGFLOW_FUNC VF_BVR_Test( int DSIndex, LPCTSTR TestLabel )
+{   
+    //Diclare data log variables
+    RESULTS_STR     VF1         [NUM_SITES],
+                    VF2         [NUM_SITES],
+                    BVR10uA     [NUM_SITES],
+                    BVR100uA    [NUM_SITES];
+    RESULTS_STR     dBVR        [NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber( TestNmbr[DSIndex] );
+    SetSubTestNumber( SubTestNmbr[DSIndex] );
+     
+
+    //Close the relays and wait for settiling
+    //No Action required
+
+    //Force All DUT pins with 0V except PUT and on PUT FIMV
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+   // apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32matdelay(APU32_MAT_OFF); /* disable relay waiting */
+    apu32set(CA_APU_68_84, APU32_FV, 0.0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //Force current and Measure forward voltage drop result on PUT and store in variable
+    apu32set(AN_APU_67_83, APU32_FI, 10.0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mv(AN_APU_67_83, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+    groupgetresults(VF1, NUM_SITES);
+    //set PUT back to 0V
+    apu32set(AN_APU_67_83, APU32_FI, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force current and Measure forward voltage drop result on PUT and store in variable
+    apu32set(LED2P_APU_75_91, APU32_FI, 10.0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mv(LED2P_APU_75_91, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+    groupgetresults(VF2, NUM_SITES);
+    //set PUT back to 0V
+    apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_30V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //Force current and Measure forward voltage drop result on PUT and store in variable
+    apu32set(AN_APU_67_83, APU32_FI, -0.01, APU32_30V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*10);
+    apu32mv(AN_APU_67_83, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+    groupgetresults(BVR10uA, NUM_SITES);
+    //set PUT back to 0V
+    apu32set(AN_APU_67_83, APU32_FI, 0, APU32_30V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_30V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force current and Measure forward voltage drop result on PUT and store in variable
+    apu32set(AN_APU_67_83, APU32_FI, -0.1, APU32_30V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 10);
+    apu32mv(AN_APU_67_83, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+    groupgetresults(BVR100uA, NUM_SITES);
+
+    //Inializing variable
+    groupgetresults(dBVR, NUM_SITES);
+
+    //set PUT back to 0V
+    apu32set(AN_APU_67_83, APU32_FI, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_OFF, 0, APU32_10V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //Open the relays and wait for settiling
+    //No Action required
+
+    //Data log the result
+    msLogResultAll(DSIndex++, VF1,      NUM_SITES);
+    msLogResultAll(DSIndex++, VF2,      NUM_SITES);
+    msLogResultAll(DSIndex++, BVR10uA,  NUM_SITES);
+    msLogResultAll(DSIndex++, BVR100uA, NUM_SITES);
+   // msLogResultAll(DSIndex++, dBVR,     NUM_SITES);
+    //int site;
+    FOR_EACH_SITE(site, NUM_SITES)
+        dBVR[site].value = (BVR100uA[site].value - BVR10uA[site].value);
+    msLogResultAll(DSIndex++, dBVR, NUM_SITES);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Icc_Test
+ETS_PRGFLOW_FUNC Icc_Test( int DSIndex, LPCTSTR TestLabel )
+{   
+    //Diclare data log variables
+    RESULTS_STR     Icc1L12V    [NUM_SITES],
+                    Icc1L18V    [NUM_SITES],
+                    Icc1L26V    [NUM_SITES],
+                    Icc1H12V    [NUM_SITES],
+                    Icc1H18V    [NUM_SITES],
+                    Icc1H26V    [NUM_SITES],
+                    Icc2L10V    [NUM_SITES],
+                    Icc2L20V    [NUM_SITES],
+                    Icc2L30V    [NUM_SITES],
+                    Icc2H10V    [NUM_SITES],
+                    Icc2H20V    [NUM_SITES],
+                    Icc2H30V    [NUM_SITES];
+                   
+    RESULTS_STR     DELIcc1HL26V[NUM_SITES];
+    RESULTS_STR     DELIcc2HL10V[NUM_SITES];
+    RESULTS_STR     DELIcc2HL30V[NUM_SITES];
+    RESULTS_STR     Icc2HF      [NUM_SITES];
+    //int site = 0;
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Close the relays and wait for settiling
+    //No Action required
+
+    //Force 12V on VCC1 pin
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Force 0mA on The ANode pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC1 current and store in variable
+    apu32mi(VCC_APU_64_80, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc1L12V, NUM_SITES);
+
+    //Intializing the variables
+    groupgetresults(DELIcc1HL26V, NUM_SITES);
+    groupgetresults(DELIcc2HL10V, NUM_SITES);
+    groupgetresults(DELIcc2HL30V, NUM_SITES);
+    groupgetresults(Icc2HF,       NUM_SITES);
+
+    //Increase VCC viltage to 18V
+    apu32set(VCC_APU_64_80, APU32_FV, 18, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC1 current and store in variable
+    apu32mi(VCC_APU_64_80, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc1L18V, NUM_SITES);
+
+    //Increase VCC viltage to 26V
+    apu32set(VCC_APU_64_80, APU32_FV, 26, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC1 current and store in variable
+    apu32mi(VCC_APU_64_80, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc1L26V, NUM_SITES);
+
+    //Force 10mA on The ANode pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 10.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC1 current and store in variable
+    apu32mi(VCC_APU_64_80, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc1H26V, NUM_SITES);
+
+    //reduce VCC viltage to 18V
+    apu32set(VCC_APU_64_80, APU32_FV, 18, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC1 current and store in variable
+    apu32mi(VCC_APU_64_80, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc1H18V, NUM_SITES);
+
+    //Reduce VCC voltage to 12V
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC1 current and store in variable
+    apu32mi(VCC_APU_64_80, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc1H12V, NUM_SITES);
+
+    //Force 0mA on The ANode pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //force VCC voltage to 0V
+    apu32set(VCC_APU_64_80, APU32_FV, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(VCC_APU_64_80, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+   // site = 0;
+    FOR_EACH_SITE(site, NUM_SITES)
+        DELIcc1HL26V[site].value = (Icc1H26V[site].value - Icc1L26V[site].value);
+
+    //pre setting test
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //Force 10V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Force 0mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2L10V, NUM_SITES);
+
+    //Force 20V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2L20V, NUM_SITES);
+
+    //Force 30V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 30, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2L30V, NUM_SITES);
+
+    //Force 10mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 10.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2H30V, NUM_SITES);
+
+    //Force 20V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2H20V, NUM_SITES);
+
+    //Force 10V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2H10V, NUM_SITES);
+
+  
+    // For ICC2 HF measurement pre setting
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 20V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2HF, NUM_SITES);
+
+    //Force 0mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(AN_APU_67_83, APU32_FV, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 0V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //site = 0;
+    FOR_EACH_SITE(site, NUM_SITES) {
+        DELIcc2HL10V[site].value = (Icc2H10V[site].value - Icc2L10V[site].value);
+        DELIcc2HL30V[site].value = (Icc2H30V[site].value - Icc2L30V[site].value);
+        //Icc2HF[site].value = Icc2H30V[site].value;
+    }
+    //log the results
+    msLogResultAll(DSIndex++, Icc1L12V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1L18V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1L26V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H12V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H18V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H26V,     NUM_SITES);
+    msLogResultAll(DSIndex++, DELIcc1HL26V, NUM_SITES);
+                                            
+    msLogResultAll(DSIndex++, Icc2L10V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2L20V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2L30V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H10V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H20V,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H30V,     NUM_SITES);
+                                            
+    msLogResultAll(DSIndex++, DELIcc2HL10V, NUM_SITES);
+    msLogResultAll(DSIndex++, DELIcc2HL30V, NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2HF      , NUM_SITES);  
+  
+     
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Ith1_Ith2_Test
+ETS_PRGFLOW_FUNC Ith1_Ith2_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    site = 0;
+    //Diclare data log variables
+    RESULTS_STR     ITH1P_var[NUM_SITES],
+        ITH1N_var[NUM_SITES],
+        ITH1_HYS_var[NUM_SITES],
+        ITH2P_var[NUM_SITES],
+        ITH2N_var[NUM_SITES],
+        ITH2_HYS_var[NUM_SITES];
+
+    ACCUMULATOR_STR     ITH1_Inputs     [NUM_SITES],
+                        ITH2_Inputs     [NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Preset conditions
+    //pre setting test
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //alarams masking
+    alarmmask("VO_SPU_40_42,VCC2_SPU_41_43", ALARM_DISABLE, ALARM_SELECT_ALL, ALARM_SELECT_ALL, ALARM_SELECT_ALL, MS_ALL);
+
+    //close required Cbits
+    cbuclose( VCC2_TO_DCAP_CON_CBU_9_25, MS_ALL );
+    lwait(delay);
+    //Force VCC1 to 12V and VCC2 to 20V
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+  
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay*5);
+    //Force 0mA on Vout pin
+    spu2112set(VO_SPU_40_42, SPU2112_FI_PATTERN, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //Force 0mA on AN pin
+    apu32set(AN_APU_67_83, APU32_FI_PATTERN, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Program the AWG_START clock connected to VCC1_APU
+    scumode("AN_APU_67_83, VO_SPU_40_42" , SCU_CLK, 2500, SCU_MAINCLKA, SCU_TRIGNORMAL , MS_ALL );//set clk frequency to 10K Hz
+    lwait(delay*2);
+    apu32patternselect(AN_APU_67_83, "ITH1_Pattern");
+    spu2112patternselect(VO_SPU_40_42, "ITH1_Vo_Pattern");
+    lwait(delay * 2);
+    apu32adcmode(AN_APU_67_83, APU32_MI_1X, 1, APU32_ADC_OFF, MS_ALL);
+    spu2112adcmode(VO_SPU_40_42, SPU2112_MV_1X, SPU2112_MI_OFF, 1, MS_ALL);
+    lwait(delay*5);
+
+    scurun("Seq_ITH1_AWG", SCU_NODIGITAL, 1, MS_ALL);
+    lwait(delay * 2);
+    //namearray("ITH1_Pattern", NAMEARRAY_SP112_VADC, VO_SPU_40_42, 1);
+    workareacreate("ITH1_I_Data", WORKAREA_APU32_IADC, "AN_APU_67_83", NULL, 190, MS_ALL);
+    workareacreate("ITH1_V_Data", WORKAREA_SPU2112_VADC, "VO_SPU_40_42", NULL, 190, MS_ALL);
+    lwait(delay);
+    //average("ITH1_V_Data", 1, 100);
+    whereat("ITH1_V_Data", 1, 100, 8);
+    groupgetresults(ITH1P_var, NUM_SITES); 
+    groupgetresults(ITH1_HYS_var, NUM_SITES);
+    for (site=0; site < NUM_SITES; site++)
+    {
+        if (ITH1P_var[site].value == FLT_MAX)
+        {
+            ITH1_Inputs[site].start = 100;
+            ITH1_Inputs[site].stop = 100;
+            ITH1_Inputs[site].value1 = 0;
+        }
+        else {
+            ITH1_Inputs[site].start = ITH1P_var[site].value;
+            ITH1_Inputs[site].stop = ITH1P_var[site].value;
+            ITH1_Inputs[site].value1 = ITH1P_var[site].value;
+        }
+    }
+    groupsetaccumulator(ITH1_Inputs, NUM_SITES);
+    //whereat("ITH1_I_Data", USE_ACCUM, USE_ACCUM, USE_ACCUM);
+    average("ITH1_I_Data", USE_ACCUM, USE_ACCUM);
+    groupgetresults(ITH1P_var, NUM_SITES);
+    msLogResultAll(DSIndex++, ITH1P_var, NUM_SITES);
+    //average("ITH1_V_Data", 1, 100);
+    whereat("ITH1_V_Data", 101, 190, 8);
+    groupgetresults(ITH1N_var, NUM_SITES);
+
+    for (site=0; site < NUM_SITES; site++)
+    {
+        if (ITH1N_var[site].value == FLT_MAX)
+        {
+            ITH1_Inputs[site].start = 100;
+            ITH1_Inputs[site].stop = 100;
+            ITH1_Inputs[site].value1 = 0;
+        }
+        else {
+            ITH1_Inputs[site].start = ITH1N_var[site].value;
+            ITH1_Inputs[site].stop = ITH1N_var[site].value;
+            ITH1_Inputs[site].value1 = ITH1N_var[site].value;
+        }
+    }
+    groupsetaccumulator(ITH1_Inputs, NUM_SITES);
+    //whereat("ITH1_I_Data", USE_ACCUM, USE_ACCUM, USE_ACCUM);
+    average("ITH1_I_Data", USE_ACCUM, USE_ACCUM);
+    groupgetresults(ITH1N_var, NUM_SITES);
+    msLogResultAll(DSIndex++, ITH1N_var, NUM_SITES);
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        ITH1_HYS_var[site].value = (ITH1P_var[site].value - ITH1N_var[site].value);
+    }
+    msLogResultAll(DSIndex++, ITH1_HYS_var  ,    NUM_SITES);
+    workareafree("ITH1_I_Data");
+    workareafree("ITH1_V_Data");
+    //Reset instruments
+    // Force 0V on AN pin
+    apu32adcmode(AN_APU_67_83, APU32_ADC_OFF, 1, APU32_ADC_OFF, MS_ALL);
+    spu2112adcmode(VO_SPU_40_42, SPU2112_MV_OFF, SPU2112_MI_OFF, 1, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //Force 0mA on Vout pin and turn oFF
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 5);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //Open required Cbits
+    cbuopen(VCC2_TO_DCAP_CON_CBU_9_25, MS_ALL);
+    lwait(delay * 5);
+ 
+    //Restore all alarams
+    alarmmask("VO_SPU_40_42,VCC2_SPU_41_43", ALARM_ENABLE, ALARM_SELECT_ALL, ALARM_SELECT_ALL, ALARM_SELECT_ALL, MS_ALL);
+    lwait(delay * 2);
+   
+
+    /////////////////////////////ITH2////////////////////////////////
+    // Masking alarams
+    alarmmask("UVLO_APU_65_81, VCC_APU_64_80", ALARM_DISABLE, ALARM_SELECT_ALL, ALARM_SELECT_ALL, ALARM_SELECT_ALL, MS_ALL);
+    lwait(delay * 2);
+    //Close UVLO_Pull up R Relay
+   // cbuclose(UVLO_TO_HSD_CON_CBU_0_16, MS_ALL);
+   // lwait(delay * 5);
+    //hsd32viset(UVLO_HSD_0_16, HSD32_FV, 5.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+
+   // //close required Cbits
+   // cbuclose(VCC2_TO_DCAP_CON_CBU_9_25, MS_ALL);
+   // lwait(delay);
+   //
+   // spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+   // lwait(delay * 5);
+   // apu32set(UVLO_APU_65_81, APU32_FV, 5.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+   // lwait(delay * 5);
+   // //apu32set(UVLO_APU_65_81, APU32_FI, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+   // apu32mv(UVLO_APU_65_81, APU32_MV_1X, 40, 10, APU32_MI_1X, APU32_NORMAL, MS_ALL);
+   // //apu32mi(UVLO_APU_65_81, APU32_MI_1X, 40, 10, MS_ALL);
+   // groupgetresults(ITH2P_var, NUM_SITES);
+    
+    //Set up for ITH2 test
+    apu32set(UVLO_APU_65_81, APU32_FV_PATTERN, 5, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FI_PATTERN, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Program the AWG_START clock connected to VCC1_APU
+    scumode("UVLO_APU_65_81, LED2P_APU_75_91", SCU_CLK, 1250, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL);//set clk frequency to 20K Hz
+    lwait(delay*2);
+    apu32patternselect(LED2P_APU_75_91, "ITH2_Pattern");
+    apu32patternselect(UVLO_APU_65_81, "ITH2_Uvlo_Pattern");
+
+    lwait(delay * 2);
+
+    apu32adcmode(LED2P_APU_75_91, APU32_MI_1X, 1, APU32_ADC_OFF, MS_ALL);
+    apu32adcmode(UVLO_APU_65_81, APU32_MV_1X, 1, APU32_ADC_OFF, MS_ALL);//apu32adcmode(UVLO_APU_65_81, APU32_MV_1X, 1, APU32_ADC_OFF, MS_ALL);
+    lwait(delay*5);
+   
+    scurun("Seq_ITH2_AWG", SCU_NODIGITAL, 1, MS_ALL);
+    lwait(delay * 5);
+    //namearray("ITH1_Pattern", NAMEARRAY_SP112_VADC, VO_SPU_40_42, 1);
+    workareacreate("ITH2_I_Data", WORKAREA_APU32_IADC, "LED2P_APU_75_91", NULL, 190, MS_ALL);
+    workareacreate("ITH2_V_Data", WORKAREA_APU32_VADC, "UVLO_APU_65_81", NULL, 190, MS_ALL);
+    lwait(delay);
+
+    whereat("ITH2_V_Data", 1, 100, 2.5);
+    groupgetresults(ITH2P_var, NUM_SITES);
+    groupgetresults(ITH2_HYS_var, NUM_SITES);
+    for (site=0; site < NUM_SITES; site++)
+    {
+        if (ITH2P_var[site].value == FLT_MAX)
+        {
+            ITH2_Inputs[site].start = 100;
+            ITH2_Inputs[site].stop = 100;
+            ITH2_Inputs[site].value1 = 0;
+        }
+        else {
+            ITH2_Inputs[site].start     = ITH2P_var[site].value;
+            ITH2_Inputs[site].stop      = ITH2P_var[site].value;
+            ITH2_Inputs[site].value1    = ITH2P_var[site].value;
+        }
+    }
+    groupsetaccumulator(ITH2_Inputs, NUM_SITES);
+    //whereat("ITH1_I_Data", USE_ACCUM, USE_ACCUM, USE_ACCUM);
+    average("ITH2_I_Data", USE_ACCUM, USE_ACCUM);
+    groupgetresults(ITH2P_var, NUM_SITES);
+    msLogResultAll(DSIndex++, ITH2P_var, NUM_SITES);
+    whereat("ITH2_V_Data", 101, 190, 2.5);
+    groupgetresults(ITH2N_var, NUM_SITES);
+   
+    for (site=0; site < NUM_SITES; site++)
+    {
+        if (ITH2N_var[site].value == FLT_MAX)
+        {
+            ITH2_Inputs[site].start = 100;
+            ITH2_Inputs[site].stop = 100;
+            ITH2_Inputs[site].value1 = 0;
+        }
+        else {
+            ITH2_Inputs[site].start     = ITH2N_var[site].value;
+            ITH2_Inputs[site].stop      = ITH2N_var[site].value;
+            ITH2_Inputs[site].value1    = ITH2N_var[site].value;
+        }
+    }
+    groupsetaccumulator(ITH2_Inputs, NUM_SITES);
+    
+    average("ITH2_I_Data", USE_ACCUM, USE_ACCUM);
+    groupgetresults(ITH2N_var, NUM_SITES);
+    msLogResultAll(DSIndex++, ITH2N_var, NUM_SITES);
+
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        ITH2_HYS_var[site].value = (ITH2P_var[site].value - ITH2N_var[site].value);
+    }
+    msLogResultAll(DSIndex++, ITH2_HYS_var, NUM_SITES);
+    workareafree("ITH2_I_Data");
+    workareafree("ITH2_V_Data");
+    apu32adcmode(LED2P_APU_75_91, APU32_ADC_OFF, 1, APU32_ADC_OFF, MS_ALL);
+    apu32adcmode(UVLO_APU_65_81, APU32_ADC_OFF, 1, APU32_ADC_OFF, MS_ALL);
+    //Reset instruments
+    apu32set(UVLO_APU_65_81, APU32_FV,  0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+
+    //hsd32viset(UVLO_HSD_0_16, HSD32_FV, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+    //lwait(delay * 5);;
+    //hsd32viset(UVLO_HSD_0_16, HSD32_OFF, 0.0, HSD32_8V, HSD32_32MA, HSD32_CLAMP_OFF, HSD32_CLAMP_OFF, MS_ALL);
+    //lwait(delay);
+    //cbuopen(UVLO_TO_HSD_CON_CBU_0_16, MS_ALL);
+    //lwait(delay * 5);
+    
+
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    // Force 0V on AN pin
+    apu32set(VCC_APU_64_80, APU32_FV, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VCC_APU_64_80, SPU2112_OFF, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 5);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //Open required Cbits
+    cbuopen(VCC2_TO_DCAP_CON_CBU_9_25, MS_ALL);
+
+    //Restore all alarams
+    alarmmask("UVLO_APU_65_81, VCC_APU_64_80", ALARM_ENABLE, ALARM_SELECT_ALL, ALARM_SELECT_ALL, ALARM_SELECT_ALL, MS_ALL);
+    lwait(delay * 2);
+
+    return(msSiteStat(MS_ALL)); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Fault_Current_Test
+ETS_PRGFLOW_FUNC Fault_Current_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    //Diclare data log variables
+    RESULTS_STR     IFault_H[NUM_SITES],
+                    IFault_L[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Close the relays and wait for settiling
+    //No Action required
+
+
+    //Pre set conditions of the DUT
+    //Force 0mA on The ANode pin
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //force VCC voltage to 12V and VCC2 to 20V
+    apu32set(VCC_APU_64_80, APU32_FV, 12.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Force 0.4V on the Fault pin
+    apu32set(FAULT_APU_66_82, APU32_FV, 0.4, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+
+    //Force 10mA on the AN pin
+    apu32set(AN_APU_67_83, APU32_FI, 10, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    apu32mi(FAULT_APU_66_82, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(IFault_L, NUM_SITES);
+
+    //Force 0mA on the AN pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*10);
+
+    //Force 5V on the Fault pin
+    apu32set(FAULT_APU_66_82, APU32_FV, 5, APU32_10V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 20);
+    apu32mi(FAULT_APU_66_82, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(IFault_H, NUM_SITES);
+
+    FOR_EACH_SITE(site, NUM_SITES)
+        IFault_H[site].value = IFault_H[site].value * 1000;     //converted mA to uA
+
+    //log the results
+    msLogResultAll(DSIndex++, IFault_L, NUM_SITES);
+    msLogResultAll(DSIndex++, IFault_H, NUM_SITES);
+   
+    //Reset the instruments
+    //Force 0mA on the AN pin
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Uvlo_Current_Test
+ETS_PRGFLOW_FUNC Uvlo_Current_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    //Diclare data log variables
+    RESULTS_STR     IUvlo_H[NUM_SITES],
+        IUvlo_L[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Close the relays and wait for settiling
+    //No Action required
+
+    //Pre set conditions of the DUT
+    //Force 0mA on The ANode pin
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //force VCC voltage to 6V and VCC2 to 10V
+    apu32set(VCC_APU_64_80, APU32_FV, 6, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Force 0.4V on the UVLO pin
+    apu32set(UVLO_APU_65_81, APU32_FV, 0.4, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+    apu32mi(UVLO_APU_65_81, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(IUvlo_L, NUM_SITES);
+
+    //force VCC voltage to 12V and VCC2 to 20V
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*5);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay*10);
+
+    //Force 5V on the UVLO pin
+    apu32set(UVLO_APU_65_81, APU32_FV, 5, APU32_10V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+    apu32mi(UVLO_APU_65_81, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(IUvlo_H, NUM_SITES);
+
+    FOR_EACH_SITE(site, NUM_SITES)
+        IUvlo_H[site].value = IUvlo_H[site].value * 1000;     //converted mA to uA
+
+    //log the results
+    msLogResultAll(DSIndex++, IUvlo_L, NUM_SITES);
+    msLogResultAll(DSIndex++, IUvlo_H, NUM_SITES);
+
+    //Reset the instruments
+    //Force 0mA on the AN pin
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Chg_DsChg_Current_Test
+ETS_PRGFLOW_FUNC Chg_DsChg_Current_Test( int DSIndex, LPCTSTR TestLabel )
+{
+
+    //Diclare data log variables
+    RESULTS_STR         ICharg[NUM_SITES],
+        IDisCharg[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Close the relays and wait for settiling
+    //No Action required
+
+    //Pre set conditions of the DUT
+    //Force 0mA on The ANode pin
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //force VCC2 voltage to 20V
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Force 2V on Desatpin
+    apu32set(DESAT_APU_74_90, APU32_FV, 2.0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+
+    //Force 10mA on AN pin
+    apu32set(AN_APU_67_83, APU32_FI, 10, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+
+    apu32mi(DESAT_APU_74_90, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(ICharg, NUM_SITES);
+
+    //Force 2V on Desatpin
+    apu32set(DESAT_APU_74_90, APU32_FV, 7.5, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+    apu32mi(DESAT_APU_74_90, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(IDisCharg, NUM_SITES);
+
+    //log the results
+    msLogResultAll(DSIndex++, ICharg, NUM_SITES);
+    msLogResultAll(DSIndex++, IDisCharg, NUM_SITES);
+
+    //Reset the instruments
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Led2p_Frq_Duty_Cycle_Test
+ETS_PRGFLOW_FUNC Led2p_Frq_Duty_Cycle_Test( int DSIndex, LPCTSTR TestLabel )
+{  //Diclare data log variables
+    RESULTS_STR         Led2P_Frq_Norm[NUM_SITES],
+        Led2P_Time_Norm[NUM_SITES],
+        Led2P_Frq_Fault[NUM_SITES],
+        Led2P_Time_Fault[NUM_SITES],
+        Led2P_DCycle_Norm[NUM_SITES],
+        Led2P_DCycle_Fault[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Close required relays
+    cbuclose(LED2P_TO_HSD_CON_CBU_2_18, MS_ALL);
+    lwait(delay * 4);
+
+    //pretest conditions
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Set Desat to GND
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+
+    //Force 10mA on the AN pin
+    apu32set(AN_APU_67_83, APU32_FI, 10, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //Measurement set up
+    hsd32rcvset(LED2P_HSD_3_19, HSD32_RCV_NORMAL, 0.5, 0.4, MS_ALL);
+    //hsd32rcvset(LED2P_HSD_3_19, HSD32_RCV_NORMAL, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+
+    //connect TSA to LED2P pin and arm the Time stamper//Set count as 2 since we are measuring Frq, 2 positive slops has to trigger and measure time between two triggar points
+    hsd32tsset("LED2P_HSD_3_19", HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_A, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsarm("LED2P_HSD_3_19", HSD32_TSC_A, HSD32_TS_AUTO, HSD32_TS_EDGE, HSD32_TS_POS, TRUE, MS_ALL);
+    lwait(delay);
+
+    //hsd32tsmeasure(LED2P_HSD_3_19, HSD32_TSC_A, LED2P_HSD_3_19, HSD32_TSC_B, HSD32_TS_READ_FREQUENCY, 10000, 1, HSD32_LAST_EXPECTED_SAMPLE, 1, MS_ALL);
+    hsd32tsmeasure(LED2P_HSD_3_19, HSD32_TSC_A, LED2P_HSD_3_19, HSD32_TSC_A, HSD32_TS_READ_FREQUENCY, 10000, 1, HSD32_LAST_EXPECTED_SAMPLE, 1, MS_ALL);
+    //hsd32tsmeasure(LED2P_HSD_3_19, HSD32_TSC_A, LED2P_HSD_3_19, HSD32_TSC_B, HSD32_TS_READ_FREQUENCY, 10000, 1, HSD32_LAST_EXPECTED_SAMPLE, 1, MS_ALL);
+    groupgetresults(Led2P_Frq_Norm, NUM_SITES);
+
+    //msLogResultAll(DSIndex++, Led2P_Frq_Norm);
+
+    hsd32tsset("LED2P_HSD_3_19", HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_B, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);//2
+    hsd32tsarm("LED2P_HSD_3_19", HSD32_TSC_B, HSD32_TS_AUTO, HSD32_TS_EDGE, HSD32_TS_NEG, TRUE, MS_ALL);
+    lwait(delay);
+
+    hsd32tsmeasure(LED2P_HSD_3_19, HSD32_TSC_A, LED2P_HSD_3_19, HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 10000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    groupgetresults(Led2P_DCycle_Norm, NUM_SITES);
+    groupgetresults(Led2P_Time_Norm, NUM_SITES);//Intializing
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        Led2P_Time_Norm[site].value = ((1 / Led2P_Frq_Norm[site].value) * 1000000);
+        Led2P_DCycle_Norm[site].value = ((Led2P_DCycle_Norm[site].value / Led2P_Time_Norm[site].value) * 100);
+    }
+    //msLogResultAll(DSIndex++, Led2P_DCycle_Norm);
+
+    //Set Desat to open to make DUT to Fault
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+
+    //connect TSA to LED2P pin and arm the Time stamper//Set count as 2 since we are measuring Frq, 2 positive slops has to trigger and measure time between two triggar points
+    hsd32tsset("LED2P_HSD_3_19", HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_A, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsarm("LED2P_HSD_3_19", HSD32_TSC_A, HSD32_TS_AUTO, HSD32_TS_EDGE, HSD32_TS_POS, TRUE, MS_ALL);
+    lwait(delay);
+
+    hsd32tsmeasure(LED2P_HSD_3_19, HSD32_TSC_A, LED2P_HSD_3_19, HSD32_TSC_A, HSD32_TS_READ_FREQUENCY, 10000, 1, HSD32_LAST_EXPECTED_SAMPLE, 1, MS_ALL);
+    groupgetresults(Led2P_Frq_Fault, NUM_SITES);
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        Led2P_Frq_Fault[site].value = Led2P_Frq_Fault[site].value / 1000;//Covertion from KHz to MHz
+    }
+
+    hsd32tsmeasure(LED2P_HSD_3_19, HSD32_TSC_A, LED2P_HSD_3_19, HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 10000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    groupgetresults(Led2P_DCycle_Fault, NUM_SITES);
+    groupgetresults(Led2P_Time_Fault, NUM_SITES);
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        Led2P_Time_Fault[site].value = ((1 / Led2P_Frq_Fault[site].value) * 1000);
+        Led2P_DCycle_Fault[site].value = ((Led2P_DCycle_Fault[site].value / Led2P_Time_Fault[site].value) * 100);
+    }
+    //msLogResultAll(DSIndex++, Led2P_DCycle_Fault);
+
+    //Data logs
+    msLogResultAll(DSIndex++, Led2P_Frq_Norm); //DSIndex++;
+    msLogResultAll(DSIndex++, Led2P_Frq_Fault);
+    msLogResultAll(DSIndex++, Led2P_DCycle_Norm); //DSIndex++;
+    msLogResultAll(DSIndex++, Led2P_DCycle_Fault);
+
+    hsd32tsset(LED2P_HSD_3_19, HSD32_TS_RCVL, HSD32_TS_DISCONNECT, HSD32_TSC_A, 1, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(LED2P_HSD_3_19, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_B, 1, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+
+    hsd32disconnect("LED2P_HSD_3_19", MS_ALL);
+
+    //Close required relays
+    cbuopen(LED2P_TO_HSD_CON_CBU_2_18, MS_ALL);
+    lwait(delay * 2);
+    //Set Desat to open to make DUT to Fault
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+    //Force 0mA on the AN pin
+    apu32set(AN_APU_67_83, APU32_FI, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //Turn off instruments
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, APU32_OFF, 0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: TGlitch_Timing_Test
+ETS_PRGFLOW_FUNC TGlitch_Timing_Test( int DSIndex, LPCTSTR TestLabel )
+{
+
+    //Diclare data log variables
+    RESULTS_STR         TGlitch_L[NUM_SITES],
+        TGlitch_H[NUM_SITES];
+
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    apu32set(CA_APU_68_84, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //Close required relays
+    //cbuclose(VO_TO_RG_CON_CBU_7_23, MS_ALL);
+    //cbuclose(VO_TO_HSD_CON_CBU_10_26, MS_ALL);
+    //Connect CA to 200 Ohms
+    cbuclose(CA_TO_200E_GND_CBU_3_19, MS_ALL); 
+    lwait(delay * 2);
+
+    cbuclose("VCC2_TO_DCAP_CON_CBU_9_25,CLAMP_TO_CG_CON_CBU_8_24, VO_TO_RG_CON_CBU_7_23, AN_TO_HSD_CON_CBU_5_21, VO_TO_HSD_CON_CBU_10_26", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 4);
+
+    /*UVLO, Fault, Vo and LED2P pins are in float*/
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*2);
+
+    //upd64viset(VO_UPD_15_2, UPD64_FV, 5, UPD64_10V, UPD64_2MA, UPD64_PIN_TO_VI, UPD64_KELVIN_OFF, MS_ALL);
+    //lwait(delay * 5);
+    //upd64mi(VO_UPD_15_2, UPD64_10V, 20, 10, UPD64_DIRECT_SENSE, UPD64_LPF_OFF, MS_ALL);
+    //groupgetresults(TGlitch_L, NUM_SITES);
+    //upd64mv(VO_UPD_15_2, UPD64_24V, 20, 10, UPD64_DIRECT_SENSE, UPD64_LPF_OFF, MS_ALL);
+    //groupgetresults(TGlitch_L, NUM_SITES);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_KEEP_OUTPUT, MS_ALL );
+    lwait(delay * 2);
+    //spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 128, 5.0, MS_ALL);
+    //groupgetresults(TGlitch_L, NUM_SITES);
+
+    //hsd32pinmodeset("WRPBK0_HSD, WRPBK2_HSD", HSD32_DRV_NORMAL, HSD32_RCV_NORMAL, MS_ALL);
+    hsd32force("AN_HSD_2_18,VO_HSD_4_20", "ZZ", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    //hsd32force(VO_HSD_4_20, "Z", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    hsd32rcvset(VO_HSD_4_20, HSD32_RCV_NORMAL, 4.5, 0.5, MS_ALL);
+    //hsd32levelset("TGlitch_lvl_Set", HSD32_LEVEL_RCV, 2.5, 2.4, 0, "VO_HSD_4_20", MS_ALL, "TGlitch_Profile");
+    //upd64rcvset(VO_UPD_15_2, UPD64_PIN_TO_VI, 0.5, 0.3, MS_ALL);
+
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_A, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_B, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_C, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_D, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    //upd64tsset(VO_UPD_15_2, UPD64_TS_RCVH, UPD64_TS_CONNECT, UPD64_TSC_AUTO1, 2, UPD64_TS_POS, MS_ALL);
+    //upd64tsset(VO_UPD_15_2, UPD64_TS_RCVH, UPD64_TS_CONNECT, UPD64_TSC_AUTO2, 2, UPD64_TS_NEG, MS_ALL);
+    lwait(delay * 2);
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_ALL, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_POS, FALSE, MS_ALL);
+   // hsd32tsarm(VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, MS_ALL);
+   // hsd32tsarm(VO_HSD_4_20, HSD32_TSC_C, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, MS_ALL);
+   // hsd32tsarm(VO_HSD_4_20, HSD32_TSC_D, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_POS, FALSE, MS_ALL);
+    //upd64tsarm(VO_UPD_15_2, UPD64_TSC_AUTO1, UPD64_TS_PSQ, FALSE, MS_ALL);
+    //upd64tsarm(VO_UPD_15_2, UPD64_TSC_AUTO2, UPD64_TS_PSQ, FALSE, MS_ALL);
+    lwait(delay * 2);
+
+    digitalprofileselect("TGlitch_Profile");
+    lwait(delay * 5);
+    scurun(SCU_NOANALOG, "TGlitch_pat", 1, MS_ALL);
+
+    hsd32tsmeasure(VO_HSD_4_20, HSD32_TSC_A, VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 100000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    //upd64tsmeasure(VO_UPD_15_2, UPD64_TSC_AUTO1, "VO_UPD_15_2", UPD64_TSC_AUTO2, UPD64_TS_READ_TIME_DIFFERENCE, 10000, 1, UPD64_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    groupgetresults(TGlitch_L, NUM_SITES);
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        TGlitch_L[site].value = TGlitch_L[site].value / 1000;//Covertion from nSec to USec
+    }
+    msLogResultAll(DSIndex++, TGlitch_L);
+
+    hsd32tsmeasure(VO_HSD_4_20, HSD32_TSC_C, VO_HSD_4_20, HSD32_TSC_D, HSD32_TS_READ_TIME_DIFFERENCE, 100000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    groupgetresults(TGlitch_H, NUM_SITES);
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        TGlitch_H[site].value = TGlitch_H[site].value / 1000;//Covertion from nSec to USec
+    }
+    msLogResultAll(DSIndex++, TGlitch_H);
+
+    //upd64tsset(VO_UPD_15_2, UPD64_TS_RCVL, UPD64_TS_CONNECT, UPD64_TSC_AUTO1, 2, UPD64_TS_NEG, MS_ALL);
+    //upd64tsset(VO_UPD_15_2, UPD64_TS_RCVL, UPD64_TS_CONNECT, UPD64_TSC_AUTO1, 2, UPD64_TS_POS, MS_ALL);
+    //
+    //lwait(delay * 10);
+    //upd64tsarm(VO_UPD_15_2, UPD64_TSC_AUTO1, UPD64_TS_PSQ, FALSE, MS_ALL);
+    //upd64tsarm(VO_UPD_15_2, UPD64_TSC_AUTO2, UPD64_TS_PSQ, FALSE, MS_ALL);
+    //lwait(delay * 10);
+    //digitalprofileselect("TGlitch_Profile");
+    //
+    //scurun(SCU_NOANALOG, "TGlitch_pat", 1, MS_ALL);
+    //
+    //upd64tsmeasure(VO_UPD_15_2, UPD64_TSC_AUTO1, "VO_UPD_15_2", UPD64_TSC_AUTO2, UPD64_TS_READ_TIME_DIFFERENCE, 10000, 1, UPD64_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    //groupgetresults(TGlitch_H, NUM_SITES);
+    //
+    //msLogResultAll(DSIndex++, TGlitch_H);
+
+    //scustop(SCU_STOPNORMAL);
+    //cleanup
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_DISCONNECT, HSD32_TSC_A, 1, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_B, 1, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_C, 1, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_DISCONNECT, HSD32_TSC_D, 1, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    //upd64tsset(VO_UPD_15_2, UPD64_TS_RCVH, UPD64_TS_DISCONNECT, UPD64_TSC_AUTO1, 2, UPD64_TS_POS, MS_ALL);
+    //upd64tsset(VO_UPD_15_2, UPD64_TS_RCVH, UPD64_TS_DISCONNECT, UPD64_TSC_AUTO2, 1, UPD64_TS_POS, MS_ALL);
+
+    //hsd32force(AN_HSD_2_18, "Z", 4, 0.0, 0.0, MS_ALL);
+    hsd32force("AN_HSD_2_18", "Z", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    //upd64viset(VO_UPD_15_2, UPD64_OFF, 0, UPD64_10V, UPD64_50MA, UPD64_PIN_TO_VI, UPD64_KELVIN_OFF, MS_ALL);
+    hsd32disconnect("AN_HSD_2_18, VO_HSD_4_20", MS_ALL);
+
+    //Force 0V on the VCC1 and 0V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_KEEP_OUTPUT, MS_ALL);
+    lwait(delay * 2);
+
+    //OFF
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //Open required relays
+    cbuopen(CA_TO_200E_GND_CBU_3_19, MS_ALL);
+    //cbuclose(CLAMP_TO_CG_CON_CBU_8_24, MS_ALL);
+    cbuopen("VCC2_TO_DCAP_CON_CBU_9_25,CLAMP_TO_CG_CON_CBU_8_24, VO_TO_RG_CON_CBU_7_23, AN_TO_HSD_CON_CBU_5_21, VO_TO_HSD_CON_CBU_10_26", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 2);
+
+      
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Prop_delay_Test
+ETS_PRGFLOW_FUNC Prop_delay_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    
+    //Diclare data log variables
+    RESULTS_STR         T_PropD_H[NUM_SITES],
+                        T_PropD_L[NUM_SITES],
+                        T_PWD[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    apu32set(CA_APU_68_84, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //Close required relays
+    //Connect CA to 200 Ohms
+    cbuclose(CA_TO_200E_GND_CBU_3_19, MS_ALL);
+    lwait(delay * 2);
+
+    cbuclose("VCC2_TO_DCAP_CON_CBU_9_25,CLAMP_TO_CG_CON_CBU_8_24, VO_TO_RG_CON_CBU_7_23, AN_TO_HSD_CON_CBU_5_21, VO_TO_HSD_CON_CBU_10_26", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 4);
+
+    /*UVLO, Fault, Vo and LED2P pins are in float*/
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //hsd32force("AN_HSD_2_18,VO_HSD_4_20", "ZZ", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    //hsd32force(VO_HSD_4_20, "Z", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    hsd32rcvset(AN_HSD_2_18, HSD32_RCV_NORMAL, 1.8, 1.7, MS_ALL);
+    hsd32rcvset(VO_HSD_4_20, HSD32_RCV_NORMAL, 2.5, 2.4, MS_ALL);
+    //hsd32levelset("TGlitch_lvl_Set", HSD32_LEVEL_RCV, 1.8, 1.7, 0, "AN_HSD_2_18", MS_ALL, "TGlitch_Profile");
+   // hsd32levelset("TGlitch_lvl_Set", HSD32_LEVEL_RCV, 2.5, 2.4, 0, "VO_HSD_4_20", MS_ALL, "TGlitch_Profile");
+
+    hsd32tsset(AN_HSD_2_18, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_A, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_B, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    
+    lwait(delay * 2);
+    hsd32tsarm(AN_HSD_2_18, HSD32_TSC_A, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_POS, FALSE, MS_ALL);
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_POS, FALSE, MS_ALL);
+    lwait(delay * 2);
+
+    digitalprofileselect("TGlitch_Profile");
+    lwait(delay * 5);
+    scurun(SCU_NOANALOG, "TGlitch_pat", 1, MS_ALL);
+    lwait(delay * 5);
+    hsd32tsmeasure(AN_HSD_2_18, HSD32_TSC_A, VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 1000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    groupgetresults(T_PropD_H, NUM_SITES);
+    msLogResultAll(DSIndex++, T_PropD_H);
+
+    hsd32tsset(AN_HSD_2_18, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_A, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_B, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+
+    hsd32tsarm(AN_HSD_2_18, HSD32_TSC_A, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, MS_ALL);
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, MS_ALL);
+    lwait(delay * 2);
+
+    digitalprofileselect("TGlitch_Profile");
+    lwait(delay * 5);
+    scurun(SCU_NOANALOG, "TGlitch_pat", 1, MS_ALL);
+    lwait(delay * 5);
+
+    hsd32tsmeasure(AN_HSD_2_18, HSD32_TSC_A, VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 1000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    groupgetresults(T_PropD_L, NUM_SITES);
+    groupgetresults(T_PWD, NUM_SITES);
+    msLogResultAll(DSIndex++, T_PropD_L);
+   
+    //site = 0;
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        T_PWD[site].value = T_PropD_L[site].value - T_PropD_H[site].value;
+    }
+    msLogResultAll(DSIndex++, T_PWD);
+
+    //cleanup
+    hsd32tsset(AN_HSD_2_18, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_A, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_B, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+
+    hsd32force("AN_HSD_2_18", "Z", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+
+    hsd32disconnect("AN_HSD_2_18, VO_HSD_4_20", MS_ALL);
+
+    //Force 0V on the VCC1 and 0V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //OFF
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //Open required relays
+    cbuopen(CA_TO_200E_GND_CBU_3_19, MS_ALL);
+    //cbuclose(CLAMP_TO_CG_CON_CBU_8_24, MS_ALL);
+    cbuopen("VCC2_TO_DCAP_CON_CBU_9_25,CLAMP_TO_CG_CON_CBU_8_24, VO_TO_RG_CON_CBU_7_23, AN_TO_HSD_CON_CBU_5_21, VO_TO_HSD_CON_CBU_10_26", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 2);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Rise_Fall_Time_Test
+ETS_PRGFLOW_FUNC Rise_Fall_Time_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    
+    //Diclare data log variables
+    RESULTS_STR         Trise[NUM_SITES],
+        Tfall[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    apu32set(CA_APU_68_84, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //spu2112set(VO_SPU_40_42, SPU2112_FI, 0.001, SPU2112_30V, SPU2112_1UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //Close required relays
+    //Connect CA to 200 Ohms
+    cbuclose(CA_TO_200E_GND_CBU_3_19, MS_ALL);
+    lwait(delay * 2);
+
+    cbuclose("VCC2_TO_DCAP_CON_CBU_9_25, AN_TO_HSD_CON_CBU_5_21,CLAMP_TO_CG_CON_CBU_8_24, VO_TO_HSD_CON_CBU_10_26", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22,CLAMP_TO_CG_CON_CBU_8_24,VO_TO_RG_CON_CBU_7_23//VO_TO_HSD_CON_CBU_10_26//VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 4);
+    //cbuclose(VO_TO_RG_CON_CBU_7_23, MS_ALL);
+    //lwait(delay * 2);
+    //apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    /*UVLO, Fault, Vo and LED2P pins are in float*/
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 2);
+    apu32mv(VEE2_APU_76_92, APU32_MV_1X, 10, 5, APU32_NOT_SHARED, APU32_NORMAL, MS_ALL);
+    groupgetresults(Trise, NUM_SITES);
+    groupgetresults(Tfall, NUM_SITES);
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    //hsd32force("AN_HSD_2_18,VO_HSD_4_20", "ZZ", 4, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    hsd32force(AN_HSD_2_18, "Z", 4, 0.0, HSD32_IGNORE_LEVEL, site);
+    hsd32rcvset(VO_HSD_4_20, HSD32_RCV_NORMAL, 4.5, 0.5, site);
+    //upd64rcvset(VO_UPD_2_18, UPD64_PIN_TO_VI, 4.5, 0.5, MS_ALL);
+
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_A, 1, HSD32_TS_POS, 0, 0, 0.0, site);//HSD32_TS_RCVL
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_B, 1, HSD32_TS_POS, 0, 0, 0.0, site);//HSD32_TS_RCVH
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_C, 2, HSD32_TS_NEG, 0, 0, 0.0, site);//HSD32_TS_RCVH
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_D, 2, HSD32_TS_NEG, 0, 0, 0.0, site);//HSD32_TS_RCVL
+
+    //upd64tsset(VO_UPD_2_18, UPD64_TS_RCVL, UPD64_TS_CONNECT, UPD64_TSC_A, 1, UPD64_TS_POS, MS_ALL);
+    //upd64tsset(VO_UPD_2_18, UPD64_TS_RCVH, UPD64_TS_CONNECT, UPD64_TSC_B, 1, UPD64_TS_POS, MS_ALL);
+
+    //hsd32levelset("T_rise_fall_lvl_Set", HSD32_LEVEL_RCV, 4.4, 0.4, 0, "VO_HSD_4_20", MS_ALL, "TGlitch_PCG");
+
+    lwait(delay * 2);
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_A, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_POS, FALSE, site);//HSD32_TS_PSQ
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_POS, FALSE, site);//HSD32_TS_PSQ
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_C, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, site);//HSD32_TS_PSQ
+    hsd32tsarm(VO_HSD_4_20, HSD32_TSC_D, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, site);//HSD32_TS_PSQ
+    //upd64tsarm(VO_UPD_2_18, UPD64_TSC_A, UPD64_TS_PSQ, FALSE, MS_ALL);
+    //upd64tsarm(VO_UPD_2_18, UPD64_TSC_B, UPD64_TS_PSQ, FALSE, MS_ALL);
+    lwait(delay * 2);
+
+    digitalprofileselect("TGlitch_PCG");//TGlitch_PCG//TGlitch_Profile
+    lwait(delay * 5);
+    scurun(SCU_NOANALOG, "T_rise_fall", 1, MS_ALL);//T_rise_fall//TGlitch_pat
+    lwait(delay * 5);
+
+    Trise[site].value= hsd32tsmeasure(VO_HSD_4_20, HSD32_TSC_A, VO_HSD_4_20, HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 1000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, site);
+    Tfall[site].value= hsd32tsmeasure(VO_HSD_4_20, HSD32_TSC_C, VO_HSD_4_20, HSD32_TSC_D, HSD32_TS_READ_TIME_DIFFERENCE, 1000, 2, HSD32_LAST_ACTUAL_SAMPLE, 1, site);
+   
+    //cleanup
+    hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_DISCONNECT, HSD32_TSC_ALL, 1, HSD32_TS_POS, 0, 0, 0.0, site);
+    //hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_B, 2, HSD32_TS_POS, 0, 0, 0.0, MS_ALL);
+    //hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_DISCONNECT, HSD32_TSC_C, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    //hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_DISCONNECT, HSD32_TSC_D, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);
+    //upd64tsset(VO_UPD_2_18, UPD64_TS_RCVL, UPD64_TS_DISCONNECT, UPD64_TSC_ALL, 1, UPD64_TS_NEG, MS_ALL);
+    hsd32force(AN_HSD_2_18, "Z", 4, 0.0, HSD32_IGNORE_LEVEL, site);
+    //upd64force(VO_UPD_2_18, "Z", UPD64_PIN_TO_VI, UPD64_IGNORE_LEVEL, UPD64_IGNORE_LEVEL, MS_ALL);
+    hsd32disconnect(AN_HSD_2_18, site);
+    hsd32disconnect(VO_HSD_4_20, site);
+    //upd64disconnect(VO_UPD_2_18, MS_ALL);
+    //Force 0V on the VCC1 and 0V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+    //spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 5);
+
+    //OFF
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, site);
+    //spu2112setcapload(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //spu2112set(VCC2_SPU_41_43[site], SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, site);
+    lwait(1 MSEC);
+
+    }
+
+  // if (Tfall[1].value > 80)
+  // {
+  //
+  //     cbuclose(CA_TO_200E_GND_CBU_3_19, MS_ALL);
+  //     
+  // }
+
+    //upd64tsmeasure(VO_UPD_2_18, UPD64_TSC_A, VO_UPD_2_18, UPD64_TSC_B, UPD64_TS_READ_TIME_DIFFERENCE, 100, 1, UPD64_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+   // groupgetresults(Trise, NUM_SITES);
+    msLogResultAll(DSIndex++, Trise);
+    //groupgetresults(Tfall, NUM_SITES);
+    msLogResultAll(DSIndex++, Tfall);
+    //hsd32rcvset(VO_HSD_4_20, HSD32_RCV_NORMAL, 4.5, 0.5, MS_ALL);
+
+    //hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVH, HSD32_TS_CONNECT, HSD32_TSC_A, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);//HSD32_TS_RCVH
+    //hsd32tsset(VO_HSD_4_20, HSD32_TS_RCVL, HSD32_TS_CONNECT, HSD32_TSC_D, 2, HSD32_TS_NEG, 0, 0, 0.0, MS_ALL);//HSD32_TS_RCVL
+    //upd64tsset(VO_UPD_2_18, UPD64_TS_RCVH, UPD64_TS_CONNECT, UPD64_TSC_A, 1, UPD64_TS_NEG, MS_ALL);
+    //upd64tsset(VO_UPD_2_18, UPD64_TS_RCVL, UPD64_TS_CONNECT, UPD64_TSC_B, 1, UPD64_TS_NEG, MS_ALL);
+    //lwait(delay * 2);
+    //
+    ////hsd32tsarm(VO_HSD_4_20, HSD32_TSC_A, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, MS_ALL);
+    ////hsd32tsarm(VO_HSD_4_20, HSD32_TSC_D, HSD32_TS_PSQ, HSD32_TS_EDGE, HSD32_TS_NEG, FALSE, MS_ALL);
+    //upd64tsarm(VO_UPD_2_18, UPD64_TSC_A, UPD64_TS_PSQ, FALSE, MS_ALL);
+    //upd64tsarm(VO_UPD_2_18, UPD64_TSC_B, UPD64_TS_PSQ, FALSE, MS_ALL);
+    //lwait(delay * 2);
+    //
+   //// cbuclose(VO_TO_RG_CON_CBU_7_23, MS_ALL);
+    //lwait(delay * 2);
+    //digitalprofileselect("TGlitch_PCG");//TGlitch_PCG//TGlitch_Profile
+    //lwait(delay * 10);
+    //scurun(SCU_NOANALOG, "T_rise_fall", 1, MS_ALL);//T_rise_fall//TGlitch_pat//HSD32.ARM("0-1");
+    //lwait(delay * 5);
+
+   // hsd32tsmeasure(VO_HSD_4_20, HSD32_TSC_C, VO_HSD_4_20, HSD32_TSC_D, HSD32_TS_READ_TIME_DIFFERENCE, 1000, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    //upd64tsmeasure(VO_UPD_2_18, UPD64_TSC_A, VO_UPD_2_18, UPD64_TSC_B, UPD64_TS_READ_TIME_DIFFERENCE, 100, 1, UPD64_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+    //groupgetresults(Tfall, NUM_SITES);
+
+   // BOOL tfpass = false;
+   //
+   // FOR_EACH_SITE(site, NUM_SITES)
+   // {
+   //         if (!(30 < (Tfall[site].value) > 80))
+   //         {
+   //             while (tfpass == true) {
+   //                 tfpass = false;
+   //                 scurun(SCU_NOANALOG, "TGlitch_pat", 1, MS_ALL);//T_rise_fall//TGlitch_pat
+   //                 lwait(delay * 5);
+   //
+   //                 Tfall[site].value = hsd32tsmeasure(VO_HSD_4_20[site], HSD32_TSC_A, VO_HSD_4_20[site], HSD32_TSC_B, HSD32_TS_READ_TIME_DIFFERENCE, 100, 1, HSD32_LAST_ACTUAL_SAMPLE, 1, MS_ALL);
+   //                 if ((30 < Tfall[site].value > 80))
+   //                 {
+   //                     tfpass = true;
+   //                 }
+   //                 else
+   //                     tfpass = false;
+   //             }
+   //         }  
+   // }
+   // msLogResultAll(DSIndex++, Tfall);
+
+
+    //Open required relays
+    cbuopen(CA_TO_200E_GND_CBU_3_19, MS_ALL);
+    //cbuclose(CLAMP_TO_CG_CON_CBU_8_24, MS_ALL);
+    cbuopen("VCC2_TO_DCAP_CON_CBU_9_25,CLAMP_TO_CG_CON_CBU_8_24,CLAMP_TO_CG_CON_CBU_8_24, AN_TO_HSD_CON_CBU_5_21, VO_TO_HSD_CON_CBU_10_26", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 2);
+
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_OFF, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Ovc_Fault_Func_Test
+ETS_PRGFLOW_FUNC Ovc_Fault_Func_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    //Diclare data log variables
+    RESULTS_STR OVC_Flt_Func[NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Pretest conditions
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Initialising variable
+    apu32mi(CA_APU_68_84, APU32_MI_1X, 5, 5, MS_ALL);
+    groupgetresults(OVC_Flt_Func, NUM_SITES);
+    
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    apu32set(AN_APU_67_83, APU32_FI_PATTERN, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //close required relays
+    //cbuclose(FAULT_TO_PULL_UP_CON_CBU_14_30, MS_ALL);
+    cbuclose("VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_RG_CON_CBU_7_23, CLAMP_TO_CG_CON_CBU_8_24, FAULT_TO_HSD_CON_CBU_4_20,VO_TO_HSD_CON_CBU_10_26,DESAT_TO_UPD_CON_CBU_1_17,FAULT_TO_PULL_UP_CON_CBU_14_30", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22,CLAMP_TO_CG_CON_CBU_8_24,VO_TO_RG_CON_CBU_7_23//VO_TO_HSD_CON_CBU_10_26//VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 4);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    hsd32force("FAULT_HSD_1_17, VO_HSD_4_20", "ZZ",5, 0, HSD32_IGNORE_LEVEL, MS_ALL);
+    upd64force(DESAT_UPD_1_16, "Z", UPD64_PIN_TO_VI, 5, 0, MS_ALL);
+
+    //Program the AWG_START clock connected to AN_APU
+    scumode(AN_APU_67_83, SCU_CLK, 2500, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL); //set clk frequency to 10K Hz
+    lwait(delay * 5);
+    apu32patternselect(AN_APU_67_83, "OVC_Func_Pattern", 0, 0, 0, MS_ALL);
+    lwait(delay * 5);
+    apu32adcmode(AN_APU_67_83, APU32_MV_1X, 1, APU32_ADC_OFF, MS_ALL);
+    lwait(delay * 5);
+    digitalprofileselect("Profile1_Functinal");
+    lwait(delay * 5);
+    scurun("Seq_OVC_Func_AWG", "OVC_Func", 1, MS_ALL);
+    lwait(delay * 5);
+
+    #define NUM_VECTOR_PINS 1
+    //two pins in vector "HSD32_Pin0, UPD64_Pin1" 
+    int numFailPins, i, site;
+    int FailPinData[NUM_VECTOR_PINS][NUM_SITES];
+    int FailPinChannel[NUM_VECTOR_PINS][NUM_SITES];
+
+    DIGITAL_FAILPINSSTR* pstrFailPins;
+    
+    //If there are any failures, retrieve channel number and number of failures per site
+    FOR_EACH_SITE(site, NUM_SITES)
+    {
+        numFailPins = digitalgetfailpins("FAULT_HSD_1_17",
+                        DIGITAL_PIN_PASSFAIL, 0, NULL, site);
+        if (numFailPins > 0)
+        {
+            //Dynamically allocate memory for the failed pins
+            pstrFailPins = new DIGITAL_FAILPINSSTR[numFailPins];
+            digitalgetfailpins("FAULT_HSD_1_17", DIGITAL_PIN_PASSFAIL,
+                                numFailPins, pstrFailPins, site);
+            for (i = 0; i < numFailPins; i++)
+            {
+                FailPinData[i][site] = pstrFailPins[i].failData;
+                FailPinChannel[i][site] = pstrFailPins[i].chanNum;
+            }
+            delete[] pstrFailPins;
+
+        }//END if(numFailPins > 0)
+        OVC_Flt_Func[site].value = FailPinData[0][site];
+    }  //END FOR_EACH_SITE
+
+    msLogResultAll(DSIndex++, OVC_Flt_Func);
+
+    //reset instruments
+    apu32adcmode(AN_APU_67_83, APU32_ADC_OFF, 1, APU32_ADC_OFF, MS_ALL);
+    //force VCC voltage to 0V
+    apu32set(AN_APU_67_83, APU32_FV, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    hsd32force("FAULT_HSD_1_17, VO_HSD_4_20", "ZZ", 5, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    upd64force(DESAT_UPD_1_16, "Z", UPD64_PIN_TO_VI, 5, 0, MS_ALL);
+    hsd32disconnect("FAULT_HSD_1_17, VO_HSD_4_20", MS_ALL);
+    upd64disconnect(DESAT_UPD_1_16, MS_ALL);
+
+    //Force 0V on the VCC1 and 0V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 5);
+
+    //OFF
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(1 MSEC);
+
+    //Open required relays
+    cbuopen("VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_RG_CON_CBU_7_23, CLAMP_TO_CG_CON_CBU_8_24, FAULT_TO_HSD_CON_CBU_4_20,VO_TO_HSD_CON_CBU_10_26,DESAT_TO_UPD_CON_CBU_1_17,FAULT_TO_PULL_UP_CON_CBU_14_30", MS_ALL);//VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_UPD_CON_CBU_6_22,CLAMP_TO_CG_CON_CBU_8_24,VO_TO_RG_CON_CBU_7_23//VO_TO_HSD_CON_CBU_10_26//VO_TO_UPD_CON_CBU_6_22
+    lwait(delay * 4);
+
+    //Pretest conditions
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_OFF, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_OFF, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Func_Dssc_Test
+ETS_PRGFLOW_FUNC Func_Dssc_Test(int DSIndex, LPCTSTR TestLabel)
+{
+    //Diclare data log variables
+    RESULTS_STR         Func_LED_dssc[NUM_SITES],
+        Func_LED_invdssc[NUM_SITES];
+
+    INT64 dssc_write_data[8] = { 0x1,0x1,0x0,0x0,0x1,0x1,0x0,0x0 };
+    INT64 dssc_write_data_inv[8] = { 0 };
+    for (int i = 0; i < 8; i++)
+    {
+        dssc_write_data_inv[i] = (dssc_write_data[i]) ^ 1;
+    }
+
+    INT64 dssc_write_data_int = 0 ;
+    INT64 dssc_write_data_inv_int = 0;
+    INT64 dssc_read_data[8] = { 0 };
+    INT64 dssc_read_data_int_0 = 0 ;
+    INT64 dssc_read_data_int_1 = 0;
+    INT64 dssc_read_data_int_inv_0 = 0;
+    INT64 dssc_read_data_int_inv_1 = 0;
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //close required relays
+    //cbuclose(AN_TO_HSD_CON_CBU_5_21, MS_ALL);
+    cbuclose("VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_RG_CON_CBU_7_23, CLAMP_TO_CG_CON_CBU_8_24, CA_TO_200E_GND_CBU_3_19,VO_TO_HSD_CON_CBU_10_26,AN_TO_HSD_CON_CBU_5_21", MS_ALL);
+    lwait(delay * 4);
+
+    //Pretest conditions
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Initializing
+    apu32mi(DESAT_APU_74_90, APU32_MI_1X, 5, 5, MS_ALL);
+    groupgetresults(Func_LED_dssc, NUM_SITES);
+    groupgetresults(Func_LED_invdssc, NUM_SITES);
+
+    apu32set(AN_APU_67_83, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VO_SPU_40_42, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    //Force 12V on the VCC1 and 20V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 12, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 20.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 2);
+
+    hsd32rcvset(VO_HSD_4_20, HSD32_RCV_NORMAL, 4.5, 0.5, MS_ALL);
+    hsd32force(AN_HSD_2_18, "Z", 5, 0.0, HSD32_IGNORE_LEVEL, MS_ALL);
+    for (int bit = 0; bit < 8; bit++) {//Convert array of bits into a single integer.
+        dssc_write_data_int = (dssc_write_data_int | ((dssc_write_data[7 - bit]) << bit));
+        dssc_write_data_inv_int = (dssc_write_data_inv_int | ((dssc_write_data_inv[7 - bit]) << bit));
+    }
+
+    hsd32dsscwrite(AN_HSD_2_18, "dssc_send", 0, HSD32_PARALLEL, 8, 1, 8, dssc_write_data, MS_ALL);
+
+    digitalprofileselect("TGlitch_PCG");
+    lwait(delay * 5);
+
+    scurun(NULL, "Dssc", 1, MS_ALL);
+    lwait(delay * 5);
+
+    double dssc_data_read_0[8] = { 0 };
+    double dssc_data_read_1[8] = { 0 };
+    //int dssc_data_read_inv_0[8] = { 0 };
+    //int dssc_data_read_inv_1[8] = { 0 };
+    hsd32dsscread(VO_HSD_4_20, "dssc_rcv", 0, HSD32_PARALLEL, 8, 1, 8, dssc_read_data, 0);
+    for (int i=0; i < 8; i++)
+    {
+        dssc_data_read_0[i] = dssc_read_data[i];
+        dssc_read_data_int_0 =(dssc_read_data_int_0 | ((dssc_read_data[7 - i]) << i));
+       // dssc_data_read_inv_0[i] = (dssc_data_read_0[i]) ^ 1;
+    }
+    //add captureplots
+    paste("digi_acq_0", dssc_data_read_0, 1, 8);
+
+    hsd32dsscread(VO_HSD_4_20, "dssc_rcv", 0, HSD32_PARALLEL, 8, 1, 8, dssc_read_data, 1);
+    for (int i = 0; i < 8; i++)
+    {
+        dssc_data_read_1[i] = dssc_read_data[i];
+        dssc_read_data_int_1 = (dssc_read_data_int_1 | ((dssc_read_data[7 - i]) << i));
+       // dssc_data_read_inv_1[i] = (dssc_data_read_1[i]) ^ 1;
+
+    }
+    paste("digi_acq_1", dssc_data_read_1, 1, 8);
+
+    if (dssc_read_data_int_0 == dssc_write_data_int)
+        Func_LED_dssc[0].value = 0;
+    else 
+        Func_LED_dssc[0].value = dssc_read_data_int_0;
+
+    if (dssc_read_data_int_1 == dssc_write_data_int)
+        Func_LED_dssc[1].value = 0;
+    else
+        Func_LED_dssc[1].value = dssc_read_data_int_1;
+
+    msLogResultAll(DSIndex++, Func_LED_dssc);
+
+    dssc_read_data_int_0 = 0;
+    dssc_read_data_int_1 = 0;
+
+    hsd32dsscwrite(AN_HSD_2_18, "dssc_send", 0, HSD32_PARALLEL, 8, 1, 8, dssc_write_data_inv, MS_ALL);
+    //hsd32dsscwrite(VO_HSD_4_20, "dssc_inv_vout_send", 0, HSD32_PARALLEL, 8, 1, 8, dssc_write_data_inv, MS_ALL);
+
+    digitalprofileselect("TGlitch_PCG");
+    lwait(delay * 5);
+
+    scurun(NULL, "Dssc_inv", 1, MS_ALL);
+    lwait(delay * 5);
+
+    double dssc_inv_data_read_0[8] = { 0 };
+    double dssc_inv_data_read_1[8] = { 0 };
+    //dssc_data_read_inv_0[8] = { 0 };
+    //dssc_data_read_inv_1[8] = { 0 };
+    hsd32dsscread(VO_HSD_4_20, "dssc_rcv", 0, HSD32_PARALLEL, 8, 1, 8, dssc_read_data, 0);
+    for (int i = 0; i < 8; i++)
+    {
+        dssc_inv_data_read_0[i] = dssc_read_data[i];
+        dssc_read_data_int_0 = (dssc_read_data_int_0 | ((dssc_read_data[7 - i]) << i));
+        // dssc_data_read_inv_0[i] = (dssc_inv_data_read_0[i]) ^ 1;
+    }
+    //add captureplots
+    paste("digi_acq_inv_0", dssc_inv_data_read_0, 1, 8);
+
+    hsd32dsscread(VO_HSD_4_20, "dssc_rcv", 0, HSD32_PARALLEL, 8, 1, 8, dssc_read_data, 1);
+    for (int i = 0; i < 8; i++)
+    {
+        dssc_inv_data_read_1[i] = dssc_read_data[i];
+        dssc_read_data_int_1 = (dssc_read_data_int_1 | ((dssc_read_data[7 - i]) << i));
+        // dssc_data_read_inv_1[i] = (dssc_inv_data_read_1[i]) ^ 1;
+
+    }
+    paste("digi_acq_inv_1", dssc_inv_data_read_1, 1, 8);
+
+    if (dssc_read_data_int_0 == dssc_write_data_inv_int)
+        Func_LED_invdssc[0].value = 0;
+    else
+        Func_LED_invdssc[0].value = dssc_read_data_int_0;
+
+    if (dssc_read_data_int_1 == dssc_write_data_inv_int)
+        Func_LED_invdssc[1].value = 0;
+    else
+        Func_LED_invdssc[1].value = dssc_read_data_int_1;
+
+    msLogResultAll(DSIndex++, Func_LED_invdssc);
+
+   
+    hsd32force("VO_HSD_4_20,AN_HSD_2_18", "ZZ", HSD32_IGNORE_LEVEL, HSD32_IGNORE_LEVEL, HSD32_IGNORE_LEVEL, MS_ALL);
+
+    hsd32disconnect("VO_HSD_4_20,AN_HSD_2_18", MS_ALL);
+
+    //Force 0V on the VCC1 and 0V on VCC2 DUT pins
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay * 5);
+
+    //OFF
+    apu32set(VCC_APU_64_80, APU32_OFF, 0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    spu2112setcapload(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_100MA, 5, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(1 MSEC);
+
+    //open required relays
+    cbuopen("VCC2_TO_DCAP_CON_CBU_9_25,VO_TO_RG_CON_CBU_7_23, CLAMP_TO_CG_CON_CBU_8_24, CA_TO_200E_GND_CBU_3_19,VO_TO_HSD_CON_CBU_10_26,AN_TO_HSD_CON_CBU_5_21", MS_ALL);
+    lwait(delay * 2);
+
+    //Pretest conditions
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_10V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_OFF, 0, APU32_10V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+   
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Continuity_parallel_Test
+ETS_PRGFLOW_FUNC Continuity_parallel_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    delay = 500;
+
+    //Force All DUT pins with 0V except PUT and on PUT FIMV
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+    
+    //Diclare data log variables
+    RESULTS_STR Parallel_Conti_APU_N100uA_var   [NUM_SITES * 4],
+                Parallel_Conti_APU_N10uA_var    [NUM_SITES * 3],
+                Parallel_Conti_APU_P100uA_var   [NUM_SITES * 2],
+                Parallel_Conti_SPU_N100uA_var   [NUM_SITES * 2];
+
+    //Close required relays and wait for settiling
+    //No relay closed
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    apu32set(Parallel_Conti_APU_N100uA, APU32_FI, -0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mv(Parallel_Conti_APU_N100uA, APU32_MV_1X, 40, 10, APU32_NOT_SHARED, APU32_NORMAL, MS_ALL);
+    groupgetresults(Parallel_Conti_APU_N100uA_var, NUM_SITES * 4);
+    //set PUT back to 0V
+    apu32set(Parallel_Conti_APU_N100uA, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(Parallel_Conti_APU_N100uA, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Data log the result
+    for (int i = 0; i < 4; i++) {
+        msLogResultAll(DSIndex++, Parallel_Conti_APU_N100uA_var, NUM_SITES * 4, 3, 1);
+    }
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    apu32set(Parallel_Conti_APU_N10uA, APU32_FI, -0.01, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mv(Parallel_Conti_APU_N10uA, APU32_MV_1X, 40, 10, APU32_NOT_SHARED, APU32_NORMAL, MS_ALL);
+    groupgetresults(Parallel_Conti_APU_N10uA_var, NUM_SITES * 3);
+    //set PUT back to 0V
+    apu32set(Parallel_Conti_APU_N10uA, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(Parallel_Conti_APU_N10uA, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Data log the result
+    for (int i = 0; i < 3; i++) {
+        msLogResultAll(DSIndex++, Parallel_Conti_APU_N10uA_var, NUM_SITES * 3, 2, 1);
+    }
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    spu2112set(Parallel_Conti_SPU_N100uA, SPU2112_FI, -0.1, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112mv(Parallel_Conti_SPU_N100uA, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, SPU2112_PIN_OUT, MS_ALL);
+    groupgetresults(Parallel_Conti_SPU_N100uA_var, NUM_SITES * 2);
+    //set PUT back to 0V
+    spu2112set(Parallel_Conti_SPU_N100uA, SPU2112_FI, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(Parallel_Conti_SPU_N100uA, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    //Data log the result
+    for (int i = 0; i < 2; i++) {
+        msLogResultAll(DSIndex++, Parallel_Conti_SPU_N100uA_var, NUM_SITES * 2, 1, 1);
+    }
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    apu32set(Parallel_Conti_APU_P100uA, APU32_FI, 0.1, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mv(Parallel_Conti_APU_P100uA, APU32_MV_1X, 40, 10, APU32_NOT_SHARED, APU32_NORMAL, MS_ALL);
+    groupgetresults(Parallel_Conti_APU_P100uA_var, NUM_SITES * 2);
+    //set PUT back to 0V
+    apu32set(Parallel_Conti_APU_P100uA, APU32_FI, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(Parallel_Conti_APU_P100uA, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Data log the result
+    for (int i = 0; i < 2; i++) {
+        msLogResultAll(DSIndex++, Parallel_Conti_APU_P100uA_var, NUM_SITES * 2, 1, 1);
+    }
+
+    //Open the relays and wait for settiling
+    //No Action required
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Leakage_Parallel_Test
+ETS_PRGFLOW_FUNC Leakage_Parallel_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    delay = 500;
+
+    //Force All DUT pins with 0V except PUT and on PUT FIMV
+    apu32set(VCC_APU_64_80, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(UVLO_APU_65_81, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(FAULT_APU_66_82, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(LED2P_APU_75_91, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Diclare data log variables
+    RESULTS_STR Parallel_Leak_APU_0p3V_var[NUM_SITES * 7],
+                Parallel_Leak_APU_6V_var  [NUM_SITES * 2],
+                Parallel_Leak_APU_0p8V_var[NUM_SITES * 3],
+                Leak_icc2_var             [NUM_SITES],
+                Leak_vout_0p3V_var        [NUM_SITES];
+
+    //Close required relays and wait for settiling
+    //No relay closed
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    apu32set(Parallel_Leak_APU_0p3V, APU32_FV, 0.3, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(Parallel_Leak_APU_0p3V, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Parallel_Leak_APU_0p3V_var, NUM_SITES * 4);
+    //set PUT back to 0V
+    apu32set(Parallel_Leak_APU_0p3V, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(Parallel_Leak_APU_0p3V, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Data log the result
+    for (int i = 0; i < 7; i++) {
+        msLogResultAll(DSIndex++, Parallel_Leak_APU_0p3V_var, NUM_SITES * 7, 6, 1);
+    }
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    apu32set(Parallel_Leak_APU_6V, APU32_FV, 6, APU32_10V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32mi(Parallel_Leak_APU_6V, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Parallel_Leak_APU_6V_var, NUM_SITES * 2);
+    //set PUT back to 0V
+    apu32set(Parallel_Leak_APU_6V, APU32_FI, 0, APU32_10V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(Parallel_Leak_APU_6V, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Data log the result
+    for (int i = 0; i < 2; i++) {
+        msLogResultAll(DSIndex++, Parallel_Leak_APU_6V_var, NUM_SITES * 2, 1, 1);
+    }
+
+    //Force current and Measure result on PUT's in parallel and store in variable
+    apu32set(Parallel_Leak_APU_0p8V, APU32_FV, 0.8, APU32_3p6V, APU32_100UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);//if LED2P results <10uA, set I range tp 10uA to encrease accuracy
+    lwait(delay);
+    apu32mi(Parallel_Leak_APU_0p8V, APU32_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Parallel_Leak_APU_0p8V_var, NUM_SITES * 3);
+    //set PUT back to 0V
+    apu32set(Parallel_Leak_APU_0p8V, APU32_FI, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(Parallel_Leak_APU_0p8V, APU32_FV, 0, APU32_3p6V, APU32_10UA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Data log the result
+    for (int i = 0; i < 3; i++) {
+        msLogResultAll(DSIndex++, Parallel_Leak_APU_0p8V_var, NUM_SITES * 3, 2, 1);
+    }
+
+    //Force current and Measure result on PUT and store in variable
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 1.5, SPU2112_10V, SPU2112_20UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112mi(VO_SPU_40_42, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_icc2_var, NUM_SITES);
+
+    //set PUT back to 0V
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_20UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Force current and Measure result on PUT and store in variable
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0.3, SPU2112_10V, SPU2112_2UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    spu2112mi(VO_SPU_40_42, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Leak_vout_0p3V_var, NUM_SITES);
+
+    //set PUT back to 0V
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_2UA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VO_SPU_40_42, SPU2112_FV, 0, SPU2112_10V, SPU2112_2MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    //Data log the result
+    msLogResultAll(DSIndex++, Leak_icc2_var,        NUM_SITES);
+    msLogResultAll(DSIndex++, Leak_vout_0p3V_var,   NUM_SITES);
+
+    //Open the relays and wait for settiling
+    //No Action required
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Icc_Awg_Based_Test
+ETS_PRGFLOW_FUNC Icc_Awg_Based_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    //Diclare data log variables
+    RESULTS_STR     Icc1L12V_AWG        [NUM_SITES],
+                    Icc1L18V_AWG        [NUM_SITES],
+                    Icc1L26V_AWG        [NUM_SITES],
+                    Icc1H12V_AWG        [NUM_SITES],
+                    Icc1H18V_AWG        [NUM_SITES],
+                    Icc1H26V_AWG        [NUM_SITES],
+                    Icc2L10V_AWG        [NUM_SITES],
+                    Icc2L20V_AWG        [NUM_SITES],
+                    Icc2L30V_AWG        [NUM_SITES],
+                    Icc2H10V_AWG        [NUM_SITES],
+                    Icc2H20V_AWG        [NUM_SITES],
+                    Icc2H30V_AWG        [NUM_SITES],
+                    DELIcc1HL26V_AWG    [NUM_SITES],
+                    DELIcc2HL10V_AWG    [NUM_SITES],
+                    DELIcc2HL30V_AWG    [NUM_SITES],
+                    Icc2HF_AWG          [NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber( TestNmbr[DSIndex] );
+    SetSubTestNumber( SubTestNmbr[DSIndex] );
+     
+    //Close the relays and wait for settiling
+    //No Action required
+
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+    //Force 0mA on The LED2P pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+    //Force 12V on VCC1 pin
+    apu32set(VCC_APU_64_80, APU32_FV_PATTERN, 12, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*5);
+ 
+    //Program the AWG_START clock connected to VCC1_APU
+    scumode(VCC_APU_64_80, SCU_CLK, 2500, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL);//set clk frequency to 10K Hz
+    lwait(delay*5);
+    apu32patternselect(VCC_APU_64_80, "ICC1_Pattern");
+    lwait(delay * 5);
+    apu32adcmode(VCC_APU_64_80, APU32_MV_1X, 1, APU32_MI_1X, MS_ALL);
+    lwait(delay*5);
+    scurun("Seq_ICC1_AWG", NULL, 1, MS_ALL);
+    lwait(delay*5);
+
+    workareacreate("ICC1_Data", WORKAREA_APU32_IADC, "VCC_APU_64_80", NULL, 300, MS_ALL);
+    workareacreate("VCC1_Data", WORKAREA_APU32_VADC, "VCC_APU_64_80", NULL, 300, MS_ALL);
+    lwait(delay * 2);
+    //Read the VCC1 current on 0mA LED2P at 12V, 18V and 26V
+    average("ICC1_Data", 85, 95);
+    groupgetresults(Icc1L12V_AWG, NUM_SITES);
+
+    //Intializing the variables
+    groupgetresults(DELIcc1HL26V_AWG, NUM_SITES);
+    groupgetresults(DELIcc2HL10V_AWG, NUM_SITES);
+    groupgetresults(DELIcc2HL30V_AWG, NUM_SITES);
+    groupgetresults(Icc2HF_AWG, NUM_SITES);
+
+    average("ICC1_Data", 185, 195);
+    groupgetresults(Icc1L18V_AWG, NUM_SITES);
+
+    average("ICC1_Data", 285, 295);
+    groupgetresults(Icc1L26V_AWG, NUM_SITES);
+
+    workareafree("VCC1_Data");
+    workareafree("ICC1_Data");
+
+    // Force 10mA on The LED2P pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 10, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay * 5);
+
+    //Force 12V on VCC1 pin
+    apu32set(VCC_APU_64_80, APU32_FV_PATTERN, 12, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*5);
+
+    //Program the AWG_START clock connected to VCC1_APU
+    //scumode(VCC_APU_64_80, SCU_CLK, 2500, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL);//set clk frequency to 10K Hz
+    //lwait(delay * 5);
+    //apu32patternselect(VCC_APU_64_80, "ICC1_Pattern");
+    //lwait(delay * 5);
+    //apu32adcmode(VCC_APU_64_80, APU32_MV_1X, 1, APU32_MI_1X, MS_ALL);
+    //lwait(delay * 5);
+
+    scurun("Seq_ICC1_AWG", NULL, 1, MS_ALL);
+    lwait(delay*2);
+    workareacreate("ICC1_Data", WORKAREA_APU32_IADC, "VCC_APU_64_80", NULL, 300, MS_ALL);
+    workareacreate("VCC1_Data", WORKAREA_APU32_VADC, "VCC_APU_64_80", NULL, 300, MS_ALL);
+    lwait(delay * 2);
+    //Read the VCC1 current on 10mA LED2P at 12V, 18V and 26V
+    average("ICC1_Data", 85, 95);
+    groupgetresults(Icc1H12V_AWG, NUM_SITES);
+
+    average("ICC1_Data", 185, 195);
+    groupgetresults(Icc1H18V_AWG, NUM_SITES);
+
+    average("ICC1_Data", 285, 295);
+    groupgetresults(Icc1H26V_AWG, NUM_SITES);
+
+    workareafree("VCC1_Data");
+    workareafree("ICC1_Data");
+
+    // Force 0mA on The LED2P pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*5);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32adcmode(VCC_APU_64_80, APU32_ADC_OFF, 1, APU32_ADC_OFF, MS_ALL);
+    //force VCC voltage to 0V
+    apu32set(VCC_APU_64_80, APU32_FV, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(VCC_APU_64_80, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    // site = 0;
+    FOR_EACH_SITE(site, NUM_SITES)
+        DELIcc1HL26V_AWG[site].value = (Icc1H26V_AWG[site].value - Icc1L26V_AWG[site].value);
+
+    //pre setting test
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 10V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV_PATTERN, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay*2);
+
+    //Force 0mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*5);
+    //Program the AWG_START clock connected to VCC2_SPU
+    scumode(VCC2_SPU_41_43, SCU_CLK, 100, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL);//set clk frequency to 50K Hz
+    lwait(delay*5);
+    spu2112patternselect(VCC2_SPU_41_43, "ICC2_Pattern");
+    lwait(delay * 2);
+    spu2112adcmode(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 1, MS_ALL);
+    lwait(delay*5);
+    scurun("Seq_ICC2_AWG", NULL, 1, MS_ALL);
+    lwait(delay*2);
+    workareacreate("ICC2_Data", WORKAREA_SPU2112_IADC, "VCC2_SPU_41_43", NULL, 300, MS_ALL);
+    workareacreate("VCC2_Data", WORKAREA_SPU2112_VADC, "VCC2_SPU_41_43", NULL, 300, MS_ALL);
+
+    //Read the VCC2 current on 0mA AN at 10V, 20V and 30V
+    average("ICC2_Data", 85, 95);
+    groupgetresults(Icc2L10V_AWG, NUM_SITES);
+   
+    average("ICC2_Data", 185, 195);
+    groupgetresults(Icc2L20V_AWG, NUM_SITES);
+
+    average("ICC2_Data", 285, 295);
+    groupgetresults(Icc2L30V_AWG, NUM_SITES);
+
+    workareafree("VCC2_Data");
+    workareafree("ICC2_Data");
+    //Force 10V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV_PATTERN, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay*2);
+
+    // Force 10mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 10, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay*5);
+
+    scurun("Seq_ICC2_AWG", NULL, 1, MS_ALL);
+    lwait(delay);
+    workareacreate("ICC2_Data", WORKAREA_SPU2112_IADC, "VCC2_SPU_41_43", NULL, 300, MS_ALL);
+    workareacreate("VCC2_Data", WORKAREA_SPU2112_VADC, "VCC2_SPU_41_43", NULL, 300, MS_ALL);
+
+
+    //Read the VCC2 current on 10mA An at 10V, 20V and 30V
+    average("ICC2_Data", 85, 95);
+    groupgetresults(Icc2H10V_AWG, NUM_SITES);
+
+    average("ICC2_Data", 185, 195);
+    groupgetresults(Icc2H20V_AWG, NUM_SITES);
+
+    average("ICC2_Data", 285, 295);
+    groupgetresults(Icc2H30V_AWG, NUM_SITES);
+    workareafree("VCC2_Data");
+    workareafree("ICC2_Data");
+    // For ICC2 HF measurement pre setting
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 20V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay*4);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2HF_AWG, NUM_SITES);
+
+    //Force 0mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(AN_APU_67_83, APU32_FV, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 0V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    FOR_EACH_SITE(site, NUM_SITES) {
+        DELIcc2HL10V_AWG[site].value = (Icc2H10V_AWG[site].value - Icc2L10V_AWG[site].value);
+        DELIcc2HL30V_AWG[site].value = (Icc2H30V_AWG[site].value - Icc2L30V_AWG[site].value);
+        //Icc2HF_AWG[site].value = Icc2H30V_AWG[site].value;
+    }
+
+    msLogResultAll(DSIndex++, Icc1L12V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1L18V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1L26V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H12V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H18V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H26V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, DELIcc1HL26V_AWG, NUM_SITES);
+                                                
+    msLogResultAll(DSIndex++, Icc2L10V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2L20V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2L30V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H10V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H20V_AWG,     NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H30V_AWG,     NUM_SITES);
+                                                
+    msLogResultAll(DSIndex++, DELIcc2HL10V_AWG, NUM_SITES);
+    msLogResultAll(DSIndex++, DELIcc2HL30V_AWG, NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2HF_AWG,       NUM_SITES);
+
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
+
+// Test Function: Icc_With_Accum_Test
+ETS_PRGFLOW_FUNC Icc_With_Accum_Test( int DSIndex, LPCTSTR TestLabel )
+{
+    
+    //Diclare data log variables
+    RESULTS_STR     Icc1L12V_Accum        [NUM_SITES],
+                    Icc1L18V_Accum        [NUM_SITES],
+                    Icc1L26V_Accum        [NUM_SITES],
+                    Icc1H12V_Accum        [NUM_SITES],
+                    Icc1H18V_Accum        [NUM_SITES],
+                    Icc1H26V_Accum        [NUM_SITES],
+                    Icc2L10V_Accum        [NUM_SITES],
+                    Icc2L20V_Accum        [NUM_SITES],
+                    Icc2L30V_Accum        [NUM_SITES],
+                    Icc2H10V_Accum        [NUM_SITES],
+                    Icc2H20V_Accum        [NUM_SITES],
+                    Icc2H30V_Accum        [NUM_SITES],
+                    DELIcc1HL26V_Accum    [NUM_SITES],
+                    DELIcc2HL10V_Accum    [NUM_SITES],
+                    DELIcc2HL30V_Accum    [NUM_SITES],
+                    Icc2HF_Accum          [NUM_SITES];
+
+    // Update test numbering information
+    SetTestNumber(TestNmbr[DSIndex]);
+    SetSubTestNumber(SubTestNmbr[DSIndex]);
+
+    //Close the relays and wait for settiling
+    //No Action required
+
+    apu32set(VEE2_APU_76_92, APU32_FV, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 12V on VCC1 pin
+    apu32set(VCC_APU_64_80, APU32_FV_PATTERN, 12, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Force 0mA on The LED2P pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    //Program the AWG_START clock connected to VCC1_APU
+    scumode(VCC_APU_64_80, SCU_CLK, 2500, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL);//set clk frequency to 10K Hz
+    lwait(delay);
+    apu32patternselect(VCC_APU_64_80, "ICC1_Accum_Pattern");
+    lwait(delay * 2);
+    //Turn off ADC for accum
+    apu32adcmode(VCC_APU_64_80, APU32_ADC_OFF, 1, APU32_ADC_OFF, MS_ALL);
+    lwait(delay*5);
+    scurun("Seq_ICC1_Accum", NULL, 1, MS_ALL);
+    lwait(delay);
+    //Read the VCC1 current on 0mA LED2P at 12V, 18V and 26V with ACcum slices(Slice-1,2,3)
+    apu32miaccum("VCC_APU_64_80", "ICC1_12V", MS_ALL);
+    groupgetresults(Icc1L12V_Accum, NUM_SITES);
+
+    //Intializing the variables
+    groupgetresults(DELIcc1HL26V_Accum, NUM_SITES);
+    groupgetresults(DELIcc2HL10V_Accum, NUM_SITES);
+    groupgetresults(DELIcc2HL30V_Accum, NUM_SITES);
+    groupgetresults(Icc2HF_Accum, NUM_SITES);
+
+    apu32miaccum(VCC_APU_64_80, "ICC1_18V", MS_ALL);
+    groupgetresults(Icc1L18V_Accum, NUM_SITES);
+
+    apu32miaccum(VCC_APU_64_80, "ICC1_26V", MS_ALL);
+    groupgetresults(Icc1L26V_Accum, NUM_SITES);
+
+    //Force 12V on VCC1 pin
+    apu32set(VCC_APU_64_80, APU32_FV_PATTERN, 12, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Force 10mA on The LED2P pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 10, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    scurun("Seq_ICC1_Accum", NULL, 1, MS_ALL);
+    lwait(delay);
+    //Read the VCC1 current on 10mA LED2P at 12V, 18V and 26V with ACcum slices(Slice-1,2,3)
+    apu32miaccum(VCC_APU_64_80, "ICC1_12V", MS_ALL);
+    groupgetresults(Icc1H12V_Accum, NUM_SITES);
+
+    apu32miaccum(VCC_APU_64_80, "ICC1_18V", MS_ALL);
+    groupgetresults(Icc1H18V_Accum, NUM_SITES);
+
+    apu32miaccum(VCC_APU_64_80, "ICC1_26V", MS_ALL);
+    groupgetresults(Icc1H26V_Accum, NUM_SITES);
+
+    // Force 0mA on The LED2P pin
+    apu32set(LED2P_APU_75_91, APU32_FI, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(LED2P_APU_75_91, APU32_OFF, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+   
+    //force VCC voltage to 0V
+    apu32set(VCC_APU_64_80, APU32_FV, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(VCC_APU_64_80, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    // site = 0;
+    FOR_EACH_SITE(site, NUM_SITES)
+        DELIcc1HL26V_Accum[site].value = (Icc1H26V_Accum[site].value - Icc1L26V_Accum[site].value);
+
+    //pre setting test
+    apu32set(CLAMP_APU_72_88, APU32_FV, 0, APU32_3p6V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(DESAT_APU_74_90, APU32_FV, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_FV, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 10V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV_PATTERN, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Force 0mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    //Program the AWG_START clock connected to VCC1_APU
+    scumode(VCC2_SPU_41_43, SCU_CLK, 100, SCU_MAINCLKA, SCU_TRIGNORMAL, MS_ALL);//set clk frequency to 250K Hz
+    lwait(delay);
+    spu2112patternselect(VCC2_SPU_41_43, "ICC2_Accum_Pattern");
+    //Turn off ADC for accum
+    spu2112adcmode(VCC2_SPU_41_43, SPU2112_MV_OFF, SPU2112_MI_OFF, 1, MS_ALL);
+
+    scurun("Seq_ICC2_Accum", NULL, 1, MS_ALL);
+    lwait(delay);
+
+    //Read the VCC2 current on 0mA Anode at 10V, 20V and 30V with ACcum slices(Slice-1,2,3)
+    spu2112miaccum(VCC2_SPU_41_43, "ICC2_10V", MS_ALL);
+    groupgetresults(Icc2L10V_Accum, NUM_SITES);
+
+    spu2112miaccum(VCC2_SPU_41_43, "ICC2_20V", MS_ALL);
+    groupgetresults(Icc2L20V_Accum, NUM_SITES);
+
+    spu2112miaccum(VCC2_SPU_41_43, "ICC2_30V", MS_ALL);
+    groupgetresults(Icc2L30V_Accum, NUM_SITES);
+
+    //Force 10V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV_PATTERN, 10, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+
+    // Force 10mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 10, APU32_30V, APU32_100MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+
+    scurun("Seq_ICC2_Accum", NULL, 1, MS_ALL);
+    lwait(delay);
+    //Read the VCC2 current on 10mA Anode at 10V, 20V and 30V with ACcum slices(Slice-1,2,3)
+    spu2112miaccum(VCC2_SPU_41_43, "ICC2_10V", MS_ALL);
+    groupgetresults(Icc2H10V_Accum, NUM_SITES);
+
+    spu2112miaccum(VCC2_SPU_41_43, "ICC2_20V", MS_ALL);
+    groupgetresults(Icc2H20V_Accum, NUM_SITES);
+
+    spu2112miaccum(VCC2_SPU_41_43, "ICC2_30V", MS_ALL);
+    groupgetresults(Icc2H30V_Accum, NUM_SITES);
+
+    // For ICC2 HF measurement pre setting
+    apu32set(DESAT_APU_74_90, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 20V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 20, SPU2112_30V, SPU2112_100MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    lwait(delay);
+    //Measure the VCC2 current and store in variable
+    spu2112mi(VCC2_SPU_41_43, SPU2112_MV_1X, SPU2112_MI_1X, 40, 10, MS_ALL);
+    groupgetresults(Icc2HF_Accum, NUM_SITES);
+    // Force 0mA on The ANode pin
+    apu32set(AN_APU_67_83, APU32_FI, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    lwait(delay);
+    apu32set(AN_APU_67_83, APU32_FV, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    //Force 0V to VCC2 pin 
+    spu2112set(VCC2_SPU_41_43, SPU2112_FV, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    spu2112set(VCC2_SPU_41_43, SPU2112_OFF, 0.0, SPU2112_30V, SPU2112_10MA, SPU2112_KELVIN_OFF, SPU2112_OUTA, MS_ALL);
+    apu32set(AN_APU_67_83, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CA_APU_68_84, APU32_OFF, 0.0, APU32_30V, APU32_10MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(CLAMP_APU_72_88, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+    apu32set(VE_APU_73_89, APU32_OFF, 0, APU32_3p6V, APU32_1MA, APU32_PIN_TO_VI, APU32_KELVIN_OFF, MS_ALL);
+
+    FOR_EACH_SITE(site, NUM_SITES) {
+        DELIcc2HL10V_Accum[site].value = (Icc2H10V_Accum[site].value - Icc2L10V_Accum[site].value);
+        DELIcc2HL30V_Accum[site].value = (Icc2H30V_Accum[site].value - Icc2L30V_Accum[site].value);
+       // Icc2HF_Accum[site].value = Icc2H30V_Accum[site].value;
+    }
+
+    msLogResultAll(DSIndex++, Icc1L12V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1L18V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1L26V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H12V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H18V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc1H26V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, DELIcc1HL26V_Accum,   NUM_SITES);
+                                                    
+    msLogResultAll(DSIndex++, Icc2L10V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2L20V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2L30V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H10V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H20V_Accum,       NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2H30V_Accum,       NUM_SITES);
+                                                    
+    msLogResultAll(DSIndex++, DELIcc2HL10V_Accum,   NUM_SITES);
+    msLogResultAll(DSIndex++, DELIcc2HL30V_Accum,   NUM_SITES);
+    msLogResultAll(DSIndex++, Icc2HF_Accum,         NUM_SITES);
+  
+    return( msSiteStat( MS_ALL ) ); // Return w/status
+} // END_ETS_PRGFLOW_FUNC
 
